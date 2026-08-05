@@ -9,7 +9,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,.onrender.com"
+    "localhost,127.0.0.1,nujindiaup-website.onrender.com"
 ).split(",")
 
 # PostgreSQL database
