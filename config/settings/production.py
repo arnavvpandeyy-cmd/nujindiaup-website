@@ -7,7 +7,10 @@ from .base import *  # noqa: F401, F403
 
 DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'nujindia.org,www.nujindia.org').split(',')
+ALLOWED_HOSTS = os.environ.get(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,.onrender.com"
+).split(",")
 
 # PostgreSQL database
 DATABASES = {
@@ -44,14 +47,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Logging to file in production
-LOGGING['handlers']['file'] = {  # noqa: F405
-    'class': 'logging.handlers.RotatingFileHandler',
-    'filename': BASE_DIR / 'logs' / 'nujindia.log',  # noqa: F405
-    'maxBytes': 10 * 1024 * 1024,  # 10MB
-    'backupCount': 5,
-    'formatter': 'verbose',
-}
-LOGGING['root']['handlers'] = ['console', 'file']  # noqa: F405
+# Use console logging on Render
+LOGGING['root']['handlers'] = ['console']
 
 # Cache with Redis (optional — falls back to local memory)
 CACHES = {
