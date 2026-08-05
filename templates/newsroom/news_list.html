@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-union-red"></span><span class="text-xs font-semibold uppercase tracking-widest text-union-red bilingual-heading" data-hi="समाचार कक्ष">Newsroom</span></div>
+      <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="समाचार अपडेट">News Updates</h1>
+    </div>
+    <form method="get" class="flex gap-2">
+      <input type="search" name="q" value="{{ query }}" placeholder="Search news…" class="px-3 py-2 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-800 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none w-48">
+      <button class="px-4 py-2 bg-navy-600 text-white text-sm font-medium rounded-lg hover:bg-navy-700 transition-colors">Search</button>
+    </form>
+  </div>
+
+  {% if page_obj.object_list %}
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for post in page_obj %}
+    <article class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
+      <div class="h-56 bg-gradient-to-br from-navy-100 to-navy-200 dark:from-navy-700 dark:to-navy-800 flex items-center justify-center overflow-hidden">
+        {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        {% else %}<svg class="w-12 h-12 text-navy-300 dark:text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>{% endif %}
+      </div>
+      <div class="p-5">
+        {% if post.category %}<span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full text-white mb-3" style="background-color:{{ post.category.color|default:'#1a2744' }}">{{ post.category.name }}</span>{% endif %}
+        <h2 class="font-serif text-lg font-bold text-neutral-900 dark:text-white mb-2 leading-snug">
+          <a href="/newsroom/news/{{ post.slug }}/" class="hover:text-union-red transition-colors">{{ post.title }}</a>
+        </h2>
+        <p class="text-sm text-neutral-600 dark:text-stone-400 line-clamp-2">{{ post.summary }}</p>
+        <div class="text-xs text-neutral-400 mt-3">{{ post.published_at|date:"j N Y" }}</div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% include 'partials/pagination.html' with page_obj=page_obj %}
+  {% else %}
+  <div class="text-center py-16 text-neutral-500 dark:text-stone-400">No news posts found.</div>
+  {% endif %}
+</div>
+{% endblock %}

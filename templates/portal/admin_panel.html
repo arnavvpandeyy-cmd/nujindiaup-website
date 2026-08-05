@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{ page_title|default:"NUJ UP — Site Administration" }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:           #131517;
+  --bg2:          #1a1d21;
+  --bg3:          #20242a;
+  --header-bg:    #1c2028;
+  --section-bg:   #2a4060;
+  --section-txt:  #a8c4d8;
+  --item-bg:      #1e2228;
+  --item-hover:   #252b34;
+  --border:       #2d3340;
+  --border2:      #3a4254;
+  --link:         #79c0e8;
+  --link-hover:   #a8d8f8;
+  --add:          #56c87a;
+  --change:       #f5c542;
+  --delete:       #e05c5c;
+  --text:         #c9d1da;
+  --text2:        #8b97a6;
+  --text3:        #5a6475;
+  --badge:        #2d3a4a;
+  --badge-txt:    #79aec8;
+  --accent:       #c41e3a;
+  --radius:       4px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ─── HEADER ─── */
+#header {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 16px;
+}
+#branding {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.logo-box {
+  width: 30px; height: 30px;
+  background: var(--accent);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; color: #fff;
+  flex-shrink: 0;
+}
+.site-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #e8edf2;
+  letter-spacing: 0.01em;
+}
+.site-tag {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: -2px;
+}
+#header-search {
+  flex: 1;
+  max-width: 340px;
+  margin-left: 20px;
+}
+#header-search input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 12px;
+  outline: none;
+  transition: border-color .15s;
+}
+#header-search input:focus { border-color: var(--link); }
+#header-search input::placeholder { color: var(--text3); }
+#user-tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text2);
+  white-space: nowrap;
+}
+#user-tools .welcome {
+  font-weight: 600;
+  color: var(--text);
+  margin-right: 6px;
+}
+#user-tools a {
+  color: var(--link);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  transition: background .12s, color .12s;
+  font-weight: 500;
+}
+#user-tools a:hover { background: var(--bg3); color: var(--link-hover); }
+#user-tools .sep { color: var(--text3); padding: 0 2px; }
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb-bar {
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  font-size: 11px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.breadcrumb-bar a { color: var(--link); text-decoration: none; }
+.breadcrumb-bar a:hover { text-decoration: underline; }
+
+/* ─── MAIN LAYOUT ─── */
+#main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 20px 40px;
+}
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.content-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #e0e8f0;
+  letter-spacing: -0.01em;
+}
+.stats-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.stat-pill {
+  background: var(--badge);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--badge-txt);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stat-pill span { font-weight: 700; color: #e0e8f0; }
+
+.admin-two-col {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 1100px) { .admin-two-col { grid-template-columns: 1fr; } }
+
+/* ─── MODULE GROUPS ─── */
+.modules-panel { display: flex; flex-direction: column; gap: 14px; }
+
+.module-group {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.module-group-header {
+  background: var(--section-bg);
+  padding: 7px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--section-txt);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.module-group-header .group-icon { font-size: 12px; opacity: 0.7; }
+
+.module-row {
+  display: flex;
+  align-items: center;
+  padding: 5px 14px 5px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+  gap: 8px;
+}
+.module-row:last-child { border-bottom: none; }
+.module-row:hover { background: var(--item-hover); }
+
+.module-name {
+  flex: 1;
+  color: var(--link);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: color .1s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.module-name:hover { color: var(--link-hover); text-decoration: underline; }
+.module-name.disabled { color: var(--text3); cursor: default; pointer-events: none; }
+.module-name.disabled:hover { text-decoration: none; }
+
+.coming-soon-tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text3);
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+.module-count {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px 7px;
+  min-width: 26px;
+  text-align: center;
+}
+.module-count.alert { background: #3a1a1a; border-color: #6a2a2a; color: #e05c5c; }
+
+.module-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.btn-add, .btn-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--radius);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all .12s;
+  white-space: nowrap;
+}
+.btn-add {
+  color: var(--add);
+  border-color: rgba(86,200,122,.25);
+  background: rgba(86,200,122,.07);
+}
+.btn-add:hover { background: rgba(86,200,122,.18); border-color: rgba(86,200,122,.5); color: #7de09a; }
+.btn-change {
+  color: var(--change);
+  border-color: rgba(245,197,66,.25);
+  background: rgba(245,197,66,.07);
+}
+.btn-change:hover { background: rgba(245,197,66,.18); border-color: rgba(245,197,66,.5); color: #ffe08a; }
+.btn-view {
+  color: var(--link);
+  border-color: rgba(121,192,232,.2);
+  background: rgba(121,192,232,.06);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--radius);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all .12s;
+}
+.btn-view:hover { background: rgba(121,192,232,.15); color: var(--link-hover); }
+.btn-disabled { opacity: 0.35; pointer-events: none; cursor: not-allowed; }
+
+/* ─── RECENT ACTIONS ─── */
+.recent-panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  position: sticky;
+  top: 64px;
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+}
+.recent-panel-header {
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--section-bg);
+}
+.recent-panel-header h2 {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--section-txt);
+}
+.recent-panel-body {
+  overflow-y: auto;
+  flex: 1;
+}
+.recent-panel-body::-webkit-scrollbar { width: 4px; }
+.recent-panel-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.recent-section-title {
+  padding: 8px 14px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.recent-action {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+  cursor: default;
+}
+.recent-action:hover { background: var(--item-hover); }
+.recent-action:last-child { border-bottom: none; }
+.ra-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+.ra-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  width: 16px;
+  text-align: center;
+}
+.ra-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--link);
+  line-height: 1.4;
+  word-break: break-word;
+}
+.ra-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  padding-left: 23px;
+  font-size: 10px;
+  color: var(--text3);
+  flex-wrap: wrap;
+}
+.ra-type {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text2);
+  text-transform: uppercase;
+}
+.ra-user { font-weight: 500; color: var(--text2); }
+
+.no-actions {
+  padding: 30px 14px;
+  text-align: center;
+  color: var(--text3);
+  font-size: 12px;
+}
+.no-actions-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.4; }
+
+/* ─── SECTION HEADER COLORS ─── */
+.grp-auth   { background: #253048; }
+.grp-contact{ background: #2a3d35; }
+.grp-core   { background: #352838; }
+.grp-docs   { background: #303520; }
+.grp-events { background: #2a3040; }
+.grp-member { background: #1e3540; }
+.grp-news   { background: #382830; }
+.grp-people { background: #303020; }
+.grp-pages  { background: #2a2f3a; }
+.grp-media  { background: #25303a; }
+.grp-settings { background: #303535; }
+
+/* ─── RESPONSIVE HELPERS ─── */
+.hide-sm { display: flex; }
+@media (max-width: 768px) {
+  .hide-sm { display: none; }
+  .admin-two-col { grid-template-columns: 1fr; }
+  .recent-panel { position: static; max-height: none; }
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<div id="header">
+  <div id="branding">
+    <div class="logo-box">N</div>
+    <div>
+      <span class="site-name">NUJ Uttar Pradesh</span>
+      <span class="site-tag">Admin Panel</span>
+    </div>
+  </div>
+
+  <div id="header-search">
+    <input type="text" id="searchInput" placeholder="🔍  Search modules…" autocomplete="off" />
+  </div>
+
+  <div id="user-tools">
+    <span class="welcome">WELCOME, {{ user.username|upper }}</span>
+    <a href="/" target="_blank">View Site</a>
+    <span class="sep">/</span>
+    <a href="/membership/portal/change-password/">Change Password</a>
+    <span class="sep">/</span>
+    <a href="/portal/admin/">Portal Dashboard</a>
+    <span class="sep">/</span>
+    <a href="/membership/logout/" style="color:#e05c5c;">Log Out</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ BREADCRUMB ═══════════════════════════ -->
+<div class="breadcrumb-bar">
+  <a href="/">Home</a> › <a href="/portal/admin/">Portal</a> › Site Administration
+</div>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
+<div id="main-content">
+
+  <!-- Page header -->
+  <div class="content-header">
+    <h1>Site administration</h1>
+    <div class="stats-pills">
+      <div class="stat-pill">Members <span>{{ counts.members }}</span></div>
+      <div class="stat-pill">News <span>{{ counts.news }}</span></div>
+      <div class="stat-pill">City Units <span>{{ counts.city_units }}</span></div>
+      <div class="stat-pill">Events <span>{{ counts.events }}</span></div>
+      {% if counts.applications > 0 %}
+      <div class="stat-pill" style="border-color:#6a2a2a;color:#e05c5c;">Pending Apps <span style="color:#e05c5c;">{{ counts.applications }}</span></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="admin-two-col">
+
+    <!-- ════════════════ LEFT — MODULE GROUPS ════════════════ -->
+    <div class="modules-panel" id="modulesPanel">
+
+      <!-- 1. AUTHENTICATION & AUTHORIZATION -->
+      <div class="module-group" data-group="auth">
+        <div class="module-group-header grp-auth">
+          <span>Authentication and Authorization</span>
+          <span class="group-icon">🔐</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/members/">User Groups &amp; Roles</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/members/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/members/">Users &amp; Accounts</a>
+          <div class="module-count">{{ counts.users }}</div>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/members/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/members/">Roles &amp; Member Access</a>
+          <div class="module-count">{{ counts.members }}</div>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/members/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/members/">Permissions &amp; Access Controls</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/members/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Login History <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Failed Login Attempts <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. CONTACT INQUIRIES -->
+      <div class="module-group" data-group="contact">
+        <div class="module-group-header grp-contact">
+          <span>Contact Inquiries</span>
+          <span class="group-icon">📬</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/contact/">Contact Inquiries</a>
+          {% if counts.contact > 0 %}<div class="module-count alert">{{ counts.contact }} new</div>{% endif %}
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/contact/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Inquiry Categories <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Spam Filters <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Reply Templates <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. CORE / SITE SETTINGS -->
+      <div class="module-group" data-group="core">
+        <div class="module-group-header grp-core">
+          <span>Core / Site Settings</span>
+          <span class="group-icon">⚙️</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/announcements/">Announcements</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/announcements/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/site-settings/">Site Settings</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/site-settings/">✎ Edit Settings</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/slides/">Hero Banner Slideshow</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/slides/">✎ Upload Photos</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Header Settings <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Footer Settings <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">SEO Settings <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Redirects <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Social Links <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. DOCUMENTS & CIRCULARS -->
+      <div class="module-group" data-group="documents">
+        <div class="module-group-header grp-docs">
+          <span>Documents &amp; Circulars</span>
+          <span class="group-icon">📁</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/documents/">Document Categories</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/documents/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/documents/">Documents</a>
+          <div class="module-count">{{ counts.documents }}</div>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/documents/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Circulars <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Archived Files <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Download Stats <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-view btn-disabled" href="#">👁 View</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. EVENTS -->
+      <div class="module-group" data-group="events">
+        <div class="module-group-header grp-events">
+          <span>Events</span>
+          <span class="group-icon">📅</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/events/">Events</a>
+          <div class="module-count">{{ counts.events }}</div>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/events/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/events/">Speakers</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/events/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Event Categories <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Registrations <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">RSVP Management <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. MEMBERSHIP -->
+      <div class="module-group" data-group="membership">
+        <div class="module-group-header grp-member">
+          <span>Membership</span>
+          <span class="group-icon">🪪</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/members/">Member Profiles</a>
+          <div class="module-count">{{ counts.members }}</div>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/members/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/applications/">Applications</a>
+          {% if counts.applications > 0 %}<div class="module-count alert">{{ counts.applications }}</div>{% else %}<div class="module-count">0</div>{% endif %}
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/applications/">✎ Review</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Membership Plans <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Renewals <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/members/">Active Members</a>
+          <div class="module-actions">
+            <a class="btn-view" href="/portal/admin/members/">👁 View</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/applications/">Inactive / Verification Pending</a>
+          <div class="module-actions">
+            <a class="btn-view" href="/portal/admin/applications/">👁 View</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. NEWSROOM -->
+      <div class="module-group" data-group="newsroom">
+        <div class="module-group-header grp-news">
+          <span>Newsroom</span>
+          <span class="group-icon">📰</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/news/">Letters &amp; Statements</a>
+          <div class="module-count">{{ counts.letters }}</div>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/news/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/news/">Media Gallery</a>
+          <div class="module-count">{{ counts.media }}</div>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/news/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/news/">News Categories</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/news/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/news/">News Posts</a>
+          <div class="module-count">{{ counts.news }}</div>
+          <div class="module-actions">
+            <a class="btn-add" href="/portal/admin/news/add/">＋ Add</a>
+            <a class="btn-change" href="/portal/admin/news/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/news/">Press Releases</a>
+          <div class="module-count">{{ counts.press_releases }}</div>
+          <div class="module-actions">
+            <a class="btn-add" href="/portal/admin/press-release/add/">＋ Add</a>
+            <a class="btn-change" href="/portal/admin/news/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/news/">Drafts</a>
+          <div class="module-actions">
+            <a class="btn-view" href="/portal/admin/news/">👁 View</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Scheduled Posts <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-view btn-disabled" href="#">👁 View</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. OFFICE BEARERS & STATE UNITS -->
+      <div class="module-group" data-group="people">
+        <div class="module-group-header grp-people">
+          <span>Office Bearers &amp; City Units</span>
+          <span class="group-icon">🏛️</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/city-units/">City Unit Members</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/portal/admin/city-units/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/city-units/">City Units</a>
+          <div class="module-count">{{ counts.city_units }}</div>
+          <div class="module-actions">
+            <a class="btn-add" href="/portal/admin/city-units/add/">＋ Add</a>
+            <a class="btn-change" href="/portal/admin/city-units/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/portal/admin/office-bearers/">Office Bearers</a>
+          <div class="module-count">{{ counts.office_bearers }}</div>
+          <div class="module-actions">
+            <a class="btn-add" href="/portal/admin/office-bearers/add/">＋ Add</a>
+            <a class="btn-change" href="/portal/admin/office-bearers/">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/people/stateunit/">State Units (Django)</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/nuj-admin/people/stateunit/">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Committees <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. PAGES & CONTENT -->
+      <div class="module-group" data-group="pages">
+        <div class="module-group-header grp-pages">
+          <span>Pages &amp; Content</span>
+          <span class="group-icon">📄</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/pages/staticpage/">Home Sections</a>
+          <div class="module-actions">
+            <a class="btn-add" href="/nuj-admin/pages/staticpage/add/">＋ Add</a>
+            <a class="btn-change" href="/nuj-admin/pages/staticpage/">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/pages/staticpage/">Static Pages</a>
+          <div class="module-actions">
+            <a class="btn-add" href="/nuj-admin/pages/staticpage/add/">＋ Add</a>
+            <a class="btn-change" href="/nuj-admin/pages/staticpage/">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Testimonials <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Banners &amp; CTAs <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">FAQ <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Navigation Menus <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. MEDIA & ASSETS -->
+      <div class="module-group" data-group="media">
+        <div class="module-group-header grp-media">
+          <span>Media &amp; Assets</span>
+          <span class="group-icon">🖼️</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/newsroom/mediaasset/?category__exact=photo">Image Library</a>
+          <div class="module-actions">
+            <a class="btn-add" href="/nuj-admin/newsroom/mediaasset/add/">＋ Add</a>
+            <a class="btn-change" href="/nuj-admin/newsroom/mediaasset/?category__exact=photo">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/newsroom/mediaasset/?category__exact=video">Video Library</a>
+          <div class="module-actions">
+            <a class="btn-add" href="/nuj-admin/newsroom/mediaasset/add/">＋ Add</a>
+            <a class="btn-change" href="/nuj-admin/newsroom/mediaasset/?category__exact=video">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/documents/document/">Document Library</a>
+          <div class="module-actions">
+            <a class="btn-add" href="/nuj-admin/documents/document/add/">＋ Add</a>
+            <a class="btn-change" href="/nuj-admin/documents/document/">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Upload Manager <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Upload</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Trash / Recycle Bin <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-view btn-disabled" href="#">👁 View</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. SETTINGS & MAINTENANCE -->
+      <div class="module-group" data-group="settings">
+        <div class="module-group-header grp-settings">
+          <span>Settings / Maintenance</span>
+          <span class="group-icon">🔧</span>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/core/sitesettings/">General Settings</a>
+          <div class="module-actions">
+            <a class="btn-change" href="/nuj-admin/core/sitesettings/">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <a class="module-name" href="/nuj-admin/admin/logentry/">System Logs / Audit Trail</a>
+          <div class="module-actions">
+            <a class="btn-view" href="/nuj-admin/admin/logentry/">👁 View</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Cache Control <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Manage</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Backup &amp; Restore <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-view btn-disabled" href="#">👁 View</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">API Keys <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-add btn-disabled" href="#">＋ Add</a>
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Notification Settings <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Change</a>
+          </div>
+        </div>
+        <div class="module-row">
+          <span class="module-name disabled">Maintenance Mode <span class="coming-soon-tag">Planned</span></span>
+          <div class="module-actions">
+            <a class="btn-change btn-disabled" href="#">✎ Toggle</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /modules-panel -->
+
+    <!-- ════════════════ RIGHT — RECENT ACTIONS ════════════════ -->
+    <div class="recent-panel">
+      <div class="recent-panel-header">
+        <h2>Recent actions</h2>
+      </div>
+      <div class="recent-panel-body">
+        {% if recent_actions %}
+        <div class="recent-section-title">My actions</div>
+        {% for action in recent_actions %}
+        <div class="recent-action">
+          <div class="ra-top">
+            <span class="ra-icon">
+              {% if action.action_flag == ADDITION %}➕
+              {% elif action.action_flag == CHANGE %}✏️
+              {% elif action.action_flag == DELETION %}🗑️
+              {% endif %}
+            </span>
+            <span class="ra-title">{{ action.object_repr }}</span>
+          </div>
+          <div class="ra-meta">
+            <span class="ra-type">{{ action.content_type.model|title }}</span>
+            <span class="ra-user">{{ action.user.username }}</span>
+            <span>{{ action.action_time|timesince }} ago</span>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-actions">
+          <div class="no-actions-icon">📋</div>
+          <div>No recent actions recorded yet.</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text3)">Actions appear here as you add, edit, or delete items.</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /admin-two-col -->
+</div><!-- /main-content -->
+
+<script>
+// ─── Module search ───
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', function () {
+  const q = this.value.trim().toLowerCase();
+  document.querySelectorAll('.module-group').forEach(group => {
+    let anyVisible = false;
+    group.querySelectorAll('.module-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const match = !q || text.includes(q);
+      row.style.display = match ? '' : 'none';
+      if (match) anyVisible = true;
+    });
+    group.style.display = anyVisible ? '' : 'none';
+  });
+});
+
+// ─── Keyboard shortcut: / to focus search ───
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if (e.key === 'Escape') searchInput.blur();
+});
+</script>
+</body>
+</html>

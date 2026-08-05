@@ -1,0 +1,117 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}City Admin — {{ city_name }}{% endblock %}
+
+{% block content %}
+
+<!-- City Header -->
+<div class="bg-gray-900 border border-white/5 rounded-2xl p-6 mb-6">
+  <div class="flex items-center justify-between flex-wrap gap-4">
+    <div>
+      <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Your City Unit</div>
+      <h2 class="text-xl font-bold text-white">NUJ UP — {{ city_name }}</h2>
+      {% if unit %}
+      <div class="text-sm text-gray-400 mt-1">{{ unit.member_count|default:"—" }} members · Est. {{ unit.established_year|default:"—" }}</div>
+      {% else %}
+      <div class="text-sm text-amber-400 mt-1">⚠ City unit not set up yet — contact the Super Admin to create your unit.</div>
+      {% endif %}
+    </div>
+    {% if unit %}
+    <div class="flex gap-3">
+      <a href="/city-units/{{ unit.slug }}/" target="_blank" class="px-4 py-2.5 text-sm border border-white/10 text-gray-300 hover:text-white rounded-lg transition-colors">View Public Page ↗</a>
+      <a href="/portal/city-admin/edit-unit/" class="px-4 py-2.5 text-sm bg-union-red hover:bg-red-700 text-white font-medium rounded-lg transition-colors">Edit City Unit</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+
+  <!-- City Members -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+      <h3 class="font-semibold text-white text-sm">City Members</h3>
+      <span class="text-xs text-gray-500">{{ city_members|length }} total</span>
+    </div>
+    {% if city_members %}
+    <div class="divide-y divide-white/5">
+      {% for profile in city_members|slice:":10" %}
+      <div class="px-5 py-3 flex items-center gap-3">
+        {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" class="w-8 h-8 rounded-full object-cover flex-shrink-0" alt="" />
+        {% else %}
+        <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0">{{ profile.get_full_name|first|upper }}</div>
+        {% endif %}
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium text-white truncate">{{ profile.get_full_name }}</div>
+          <div class="text-xs text-gray-500 truncate">{{ profile.designation|default:"—" }} · {{ profile.organization|default:"—" }}</div>
+        </div>
+        <span class="text-xs font-mono text-gray-600 flex-shrink-0">{{ profile.member_id }}</span>
+      </div>
+      {% endfor %}
+      {% if city_members|length > 10 %}<div class="px-5 py-3 text-xs text-gray-500 text-center">... and {{ city_members|length|add:"-10" }} more</div>{% endif %}
+    </div>
+    {% else %}
+    <div class="py-8 text-center text-sm text-gray-500">No registered members in your city yet.</div>
+    {% endif %}
+  </div>
+
+  <!-- Pending Applications -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+      <h3 class="font-semibold text-white text-sm">Pending Applications</h3>
+      {% if city_apps %}<span class="text-xs px-2 py-0.5 rounded-full bg-amber-900/50 text-amber-300">{{ city_apps|length }}</span>{% endif %}
+    </div>
+    {% if city_apps %}
+    <div class="divide-y divide-white/5">
+      {% for app in city_apps %}
+      <div class="px-5 py-3.5">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-medium text-white">{{ app.full_name }}</div>
+            <div class="text-xs text-gray-500 mt-0.5">{{ app.designation }} · {{ app.reference_number }}</div>
+          </div>
+          <span class="text-xs px-2 py-0.5 rounded-full
+            {% if app.status == 'submitted' %}bg-blue-900/60 text-blue-300
+            {% else %}bg-amber-900/60 text-amber-300{% endif %}">
+            {{ app.get_status_display }}
+          </span>
+        </div>
+        <div class="mt-2 text-xs text-gray-500">
+          Contact Super Admin to approve: <a href="tel:+917054000149" class="text-union-red hover:underline">+91 70540 00149</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="py-8 text-center text-sm text-gray-500">No pending applications.</div>
+    {% endif %}
+  </div>
+
+  <!-- Position Holders -->
+  {% if unit and unit.members.exists %}
+  <div class="lg:col-span-2 bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+      <h3 class="font-semibold text-white text-sm">Current Position Holders</h3>
+      <a href="/portal/city-admin/edit-unit/" class="text-xs text-union-red hover:underline">Edit →</a>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
+      {% for m in unit.members.all %}
+      <div class="flex items-center gap-3 bg-gray-800/50 rounded-xl p-3">
+        {% if m.photo %}
+        <img src="{{ m.photo.url }}" class="w-12 h-12 rounded-full object-cover flex-shrink-0" alt="" />
+        {% else %}
+        <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-lg font-bold text-gray-400 flex-shrink-0">{{ m.name|first|upper }}</div>
+        {% endif %}
+        <div>
+          <div class="text-sm font-semibold text-white">{{ m.name }}</div>
+          <div class="text-xs text-union-red">{{ m.role }}</div>
+          {% if m.phone %}<div class="text-xs text-gray-400">{{ m.phone }}</div>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

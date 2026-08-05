@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  {# Page Header #}
+  <div class="mb-8">
+    <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-union-red"></span><span class="text-xs font-semibold uppercase tracking-widest text-union-red bilingual-heading" data-hi="नेतृत्व">Leadership</span></div>
+    <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="{{ heading_hi|default:'यूपी कार्यालय धारक' }}">{{ page_title }}</h1>
+    <p class="text-neutral-600 dark:text-stone-400 mt-2">{{ page_description }}</p>
+  </div>
+
+  {# Filter Bar #}
+  <form method="get" class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 mb-8 flex flex-col sm:flex-row gap-3" role="search" aria-label="Filter office bearers">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or role…"
+           class="flex-1 px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 focus:border-transparent outline-none" />
+    <select name="category" class="px-3 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-700 dark:text-stone-200 focus:ring-2 focus:ring-navy-500 outline-none">
+      <option value="">All Categories</option>
+      {% for value, label in categories %}
+      <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <select name="state" class="px-3 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-700 dark:text-stone-200 focus:ring-2 focus:ring-navy-500 outline-none">
+      <option value="">All Cities</option>
+      {% for code, name in states %}
+      <option value="{{ code }}" {% if selected_state == code %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="px-5 py-2.5 bg-navy-600 text-white text-sm font-semibold rounded-lg hover:bg-navy-700 transition-colors">Filter</button>
+    {% if query or selected_category or selected_state %}
+    <a href="/office-bearers/" class="px-4 py-2.5 text-sm text-neutral-600 dark:text-stone-300 border border-stone-300 dark:border-navy-600 rounded-lg hover:bg-stone-100 dark:hover:bg-navy-700 transition-colors">Clear</a>
+    {% endif %}
+  </form>
+
+  {# Bearers Grid — grouped by category #}
+  {% if bearers %}
+  {% regroup bearers by get_category_display as category_groups %}
+  {% for group in category_groups %}
+  <div class="mb-10">
+    <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-5 pb-2 border-b border-stone-200 dark:border-navy-700 flex items-center gap-2">
+      <span class="w-1 h-5 bg-union-red rounded-full inline-block"></span>
+      {{ group.grouper }}
+    </h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+      {% for bearer in group.list %}
+      <a href="/office-bearers/{{ bearer.slug }}/" class="group bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-union-red dark:hover:border-amber-500 hover:shadow-md transition-all duration-200">
+        {% if bearer.photo %}
+        <img src="{{ bearer.photo.url }}" alt="{{ bearer.name }}" class="w-20 h-20 rounded-full object-cover mx-auto mb-3 ring-2 ring-stone-100 dark:ring-navy-600" loading="lazy" />
+        {% else %}
+        <div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">
+          {{ bearer.name|slice:":1" }}
+        </div>
+        {% endif %}
+        <div class="text-sm font-semibold text-neutral-900 dark:text-white group-hover:text-union-red dark:group-hover:text-amber-400 transition-colors leading-tight">{{ bearer.name }}</div>
+        <div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">{{ bearer.role }}</div>
+        {% if bearer.state %}<div class="text-xs text-neutral-400 dark:text-stone-500 mt-0.5">{{ bearer.get_state_display_name }}</div>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="text-center py-16 text-neutral-400 dark:text-stone-500">
+    <svg class="w-12 h-12 mx-auto mb-4 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+    <p class="font-medium">No office bearers found matching your filters.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

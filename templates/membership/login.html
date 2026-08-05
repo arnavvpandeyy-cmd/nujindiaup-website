@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    background: linear-gradient(135deg, #0f1318 0%, #1a2235 50%, #0f1318 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .login-wrap::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(196,30,58,0.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .login-wrap::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(79,120,200,0.08) 0%, transparent 70%);
+    bottom: -80px; left: -80px;
+    pointer-events: none;
+  }
+  .login-container {
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+  }
+  .login-logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .logo-emblem {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, #c41e3a, #8b0000);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(196,30,58,0.35);
+  }
+  .logo-emblem span {
+    color: #fff;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    font-family: Georgia, serif;
+  }
+  .login-logo h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e8edf5;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .login-logo p {
+    font-size: 13px;
+    color: #6b7a8d;
+    letter-spacing: 0.02em;
+  }
+  .login-card {
+    background: rgba(26, 30, 40, 0.95);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 36px 32px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  }
+  .login-card h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #c8d4e0;
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+  .form-group {
+    margin-bottom: 18px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8b97a8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #e0e8f0;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s, background .2s;
+  }
+  .form-group input:focus {
+    border-color: rgba(196,30,58,0.6);
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 0 0 3px rgba(196,30,58,0.12);
+  }
+  .form-group input::placeholder { color: #4a5568; }
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #c41e3a, #a01830);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    margin-top: 8px;
+    transition: all .2s;
+    box-shadow: 0 4px 16px rgba(196,30,58,0.3);
+  }
+  .btn-login:hover {
+    background: linear-gradient(135deg, #d42040, #b01e34);
+    box-shadow: 0 6px 24px rgba(196,30,58,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-login:active { transform: translateY(0); }
+  .alert-error {
+    background: rgba(196,30,58,0.12);
+    border: 1px solid rgba(196,30,58,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #f08090;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .login-footer {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    font-size: 12.5px;
+    color: #5a6878;
+  }
+  .login-footer a {
+    color: #79aec8;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color .15s;
+  }
+  .login-footer a:hover { color: #a8d0f0; text-decoration: underline; }
+  .role-info {
+    margin-top: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .role-info-header {
+    background: rgba(255,255,255,0.04);
+    padding: 10px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5a6878;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .role-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 12px;
+  }
+  .role-row:last-child { border-bottom: none; }
+  .role-icon { font-size: 16px; flex-shrink: 0; }
+  .role-name { font-weight: 600; color: #c8d4e0; min-width: 90px; }
+  .role-dest { color: #5a6878; font-size: 11px; }
+  .role-dest a { color: #79aec8; text-decoration: none; }
+</style>
+
+<div class="login-wrap">
+  <div class="login-container">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="logo-emblem"><span>NUJ</span></div>
+      <h1>Member Portal</h1>
+      <p>National Union of Journalists — Uttar Pradesh</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert-error">⚠ {{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Card -->
+    <div class="login-card">
+      <h2>Sign in to your account</h2>
+      <form method="post" action="{% url 'membership:login' %}{% if next %}?next={{ next }}{% endif %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_username">Username</label>
+          <input type="text" id="id_username" name="username" required
+            autocomplete="username" placeholder="Your username" />
+        </div>
+        <div class="form-group">
+          <label for="id_password">Password</label>
+          <input type="password" id="id_password" name="password" required
+            autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn-login">Sign In →</button>
+      </form>
+
+      <!-- Role routing info -->
+      <div class="role-info">
+        <div class="role-info-header">After login, you'll be taken to:</div>
+        <div class="role-row">
+          <span class="role-icon">🛡️</span>
+          <span class="role-name">Super Admin</span>
+          <span class="role-dest">→ <a href="/portal/admin-panel/">Admin Dashboard</a></span>
+        </div>
+        <div class="role-row">
+          <span class="role-icon">🏙️</span>
+          <span class="role-name">City Admin</span>
+          <span class="role-dest">→ City Admin Dashboard</span>
+        </div>
+        <div class="role-row">
+          <span class="role-icon">🪪</span>
+          <span class="role-name">Member</span>
+          <span class="role-dest">→ My Profile &amp; City Feed</span>
+        </div>
+      </div>
+
+      <div class="login-footer">
+        <span>Not a member yet? <a href="/membership/apply/">Apply for membership</a></span>
+        <span>Applied already? <a href="/membership/status/">Check application status</a></span>
+        <span>Direct admin access: <a href="/nuj-admin/">Django Admin Panel ↗</a></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

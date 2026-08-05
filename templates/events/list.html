@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="mb-8"><div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-union-red"></span><span class="text-xs font-semibold uppercase tracking-widest text-union-red bilingual-heading" data-hi="कार्यक्रम">Events</span></div><h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="कार्यक्रम">Events</h1></div>
+  {% if upcoming %}
+  <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-4 bilingual-heading" data-hi="आगामी">Upcoming</h2>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+    {% for event in upcoming %}
+    <article class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+      <div class="bg-navy-600 text-white text-center py-3"><div class="font-serif text-2xl font-bold">{{ event.start_datetime|date:"j" }}</div><div class="text-sm font-medium uppercase tracking-wide">{{ event.start_datetime|date:"M Y" }}</div></div>
+      <div class="p-5"><h2 class="font-serif text-lg font-bold text-neutral-900 dark:text-white mb-2 leading-snug"><a href="/events/{{ event.slug }}/" class="hover:text-union-red transition-colors">{{ event.title }}</a></h2>{% if event.location %}<div class="text-sm text-neutral-500 dark:text-stone-400 flex items-center gap-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>{{ event.location }}</div>{% endif %}</div>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if past %}
+  <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-4 bilingual-heading" data-hi="पूर्व कार्यक्रम">Past Events</h2>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for event in past %}
+    <article class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl overflow-hidden opacity-80 hover:opacity-100 hover:shadow-md transition-all">
+      <div class="bg-stone-400 dark:bg-navy-700 text-white text-center py-3"><div class="font-serif text-2xl font-bold">{{ event.start_datetime|date:"j" }}</div><div class="text-sm font-medium uppercase tracking-wide">{{ event.start_datetime|date:"M Y" }}</div></div>
+      <div class="p-5"><h2 class="font-serif text-lg font-bold text-neutral-900 dark:text-white mb-2 leading-snug"><a href="/events/{{ event.slug }}/" class="hover:text-union-red transition-colors">{{ event.title }}</a></h2>{% if event.location %}<div class="text-sm text-neutral-500 dark:text-stone-400">{{ event.location }}</div>{% endif %}</div>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if not upcoming and not past %}<div class="text-center py-16 text-neutral-500 dark:text-stone-400">No events listed yet.</div>{% endif %}
+</div>
+{% endblock %}

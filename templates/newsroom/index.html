@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <div class="mb-8">
+    <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-union-red"></span><span class="text-xs font-semibold uppercase tracking-widest text-union-red bilingual-heading" data-hi="प्रेस रूम">Press Room</span></div>
+    <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="समाचार कक्ष">Newsroom</h1>
+    <p class="text-neutral-600 dark:text-stone-400 mt-2">Latest news, press releases and letters from the National Union of Journalists (India).</p>
+  </div>
+
+  <div class="lg:grid lg:grid-cols-5 lg:gap-12">
+    <!-- News -->
+    <div class="lg:col-span-3 mb-12 lg:mb-0">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="समाचार अपडेट">News Updates</h2>
+        <a href="/newsroom/news/" class="text-sm font-medium text-navy-600 dark:text-stone-300 hover:text-union-red transition-colors">View all →</a>
+      </div>
+      {% if latest_news %}
+        {% for post in latest_news %}
+        <article class="group flex gap-4 py-5 border-b border-stone-100 dark:border-navy-700">
+          <div class="flex-1 min-w-0">
+            {% if post.category %}<span class="text-xs font-semibold text-union-red uppercase tracking-wide">{{ post.category.name }}</span>{% endif %}
+            <h3 class="font-serif text-base font-bold text-neutral-900 dark:text-white mt-0.5 leading-snug">
+              <a href="/newsroom/news/{{ post.slug }}/" class="hover:text-union-red transition-colors">{{ post.title }}</a>
+            </h3>
+            <p class="text-sm text-neutral-600 dark:text-stone-400 mt-1 line-clamp-2">{{ post.summary }}</p>
+            <div class="text-xs text-neutral-400 mt-1">{{ post.published_at|date:"j N Y" }}</div>
+          </div>
+        </article>
+        {% endfor %}
+      {% else %}
+        <p class="text-neutral-500 dark:text-stone-400 text-sm py-6">No news updates yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Press Releases + Letters -->
+    <div class="lg:col-span-2 space-y-8">
+      <div>
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="प्रेस विज्ञप्ति">Press Releases</h2>
+          <a href="/newsroom/press-releases/" class="text-sm font-medium text-navy-600 dark:text-stone-300 hover:text-union-red transition-colors">View all →</a>
+        </div>
+        {% if latest_press %}
+          <div class="divide-y divide-stone-100 dark:divide-navy-700">
+            {% for release in latest_press %}
+            <article class="py-4">
+              <div class="text-xs text-neutral-400 dark:text-stone-500 mb-1">{{ release.published_at|date:"j N Y" }}</div>
+              <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug">
+                <a href="/newsroom/press-releases/{{ release.slug }}/" class="hover:text-union-red transition-colors">{{ release.title }}</a>
+              </h3>
+            </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-neutral-500 dark:text-stone-400 text-sm">No press releases yet.</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="पत्र एवं बयान">Letters &amp; Statements</h2>
+          <a href="/newsroom/letters/" class="text-sm font-medium text-navy-600 dark:text-stone-300 hover:text-union-red transition-colors">View all →</a>
+        </div>
+        {% if latest_letters %}
+          <div class="divide-y divide-stone-100 dark:divide-navy-700">
+            {% for letter in latest_letters %}
+            <article class="py-4">
+              <div class="text-xs text-neutral-400 dark:text-stone-500 mb-1">{{ letter.date_issued|date:"j N Y" }}</div>
+              <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug">
+                <a href="/newsroom/letters/{{ letter.slug }}/" class="hover:text-union-red transition-colors">{{ letter.title }}</a>
+              </h3>
+            </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-neutral-500 dark:text-stone-400 text-sm">No letters yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

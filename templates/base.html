@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" x-data="{ darkMode: false, mobileNav: false }" :class="{ 'dark': darkMode }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  {# SEO Meta Tags #}
+  {% block meta_title %}
+  <title>{% block page_title %}{% if page_title %}{{ page_title }} — NUJ UP{% else %}National Union of Journalists (Uttar Pradesh){% endif %}{% endblock %}</title>
+  {% endblock %}
+
+  <meta name="description" content="{% block meta_description %}{{ site_settings.tagline|default:'National Union of Journalists (Uttar Pradesh) — Defending Press Freedom and Journalists\' Rights Across UP.' }}{% endblock %}" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
+  {# Open Graph #}
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="{{ site_settings.site_name|default:'NUJ UP' }}" />
+  <meta property="og:title" content="{% block og_title %}{{ page_title|default:'NUJ UP' }}{% endblock %}" />
+  <meta property="og:description" content="{% block og_description %}{{ site_settings.tagline|default:'' }}{% endblock %}" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+  {% block og_image %}
+  {% if site_settings.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}" />{% endif %}
+  {% endblock %}
+
+  {# Twitter Card #}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{% block twitter_title %}{{ page_title|default:'NUJ UP' }}{% endblock %}" />
+
+  {# Favicon #}
+  {% if site_settings.favicon %}
+  <link rel="icon" href="{{ site_settings.favicon.url }}" type="image/x-icon" />
+  {% else %}
+  <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon" />
+  {% endif %}
+
+  {# Google Fonts — Playfair Display + Inter + Noto Sans Devanagari #}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  {# Tailwind CSS CDN (replace with compiled CSS in production) #}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f0f3f9',
+              100: '#d9e1f0',
+              200: '#b3c3e1',
+              300: '#7d98c8',
+              400: '#4e6ead',
+              500: '#2f508f',
+              600: '#1a2744',  // brand-navy
+              700: '#152038',
+              800: '#10192c',
+              900: '#0a1020',
+            },
+            union: {
+              red: '#b91c1c',    // brand red (strong, credible)
+              gold: '#92400e',   // brand gold
+            },
+          },
+          spacing: {
+            '128': '32rem',
+          },
+          maxWidth: {
+            'reading': '72ch',
+          },
+        },
+      },
+    }
+  </script>
+
+  {# Alpine.js #}
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  {# HTMX #}
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+  {# Custom CSS #}
+  <link rel="stylesheet" href="/static/css/nuj.css?v=2026080402" />
+
+  {% block extra_head %}{% endblock %}
+
+  {# Google Analytics #}
+  {% if site_settings.google_analytics_id %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site_settings.google_analytics_id }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site_settings.google_analytics_id }}');
+  </script>
+  {% endif %}
+</head>
+
+<body class="font-sans bg-stone-50 text-neutral-900 dark:bg-navy-900 dark:text-stone-100 antialiased min-h-screen flex flex-col">
+
+  {# Skip to content — accessibility #}
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-navy-600 focus:text-white focus:px-4 focus:py-2 focus:rounded">
+    Skip to main content
+  </a>
+
+  {# ── Announcement Banner ── #}
+  {% if active_announcements %}
+  <div class="bg-navy-600 text-white py-2 px-4 text-center text-sm font-medium" role="alert">
+    {% with announcement=active_announcements.0 %}
+    <span>{{ announcement.title }}</span>
+    {% if announcement.link %}
+    <a href="{{ announcement.link }}" class="ml-2 underline hover:text-amber-300 transition-colors">
+      {{ announcement.link_label|default:"Read More" }} →
+    </a>
+    {% endif %}
+    {% endwith %}
+  </div>
+  {% endif %}
+
+  {# ── Header / Navigation ── #}
+  {% include 'partials/navbar.html' %}
+
+  {# ── Main Content ── #}
+  <main id="main-content" class="flex-1">
+
+    {# Breadcrumb #}
+    {% if breadcrumbs %}
+    {% include 'partials/breadcrumb.html' %}
+    {% endif %}
+
+    {# Django Messages #}
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      {% for message in messages %}
+      <div class="mb-3 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2
+        {% if message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200
+        {% elif message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200
+        {% elif message.tags == 'warning' %}bg-amber-50 text-amber-800 border border-amber-200
+        {% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}"
+        role="alert">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  {# ── Footer ── #}
+  {% include 'partials/footer.html' %}
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

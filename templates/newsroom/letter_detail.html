@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="mb-6 flex items-center gap-2 text-sm text-neutral-500 dark:text-stone-400">
+    <a href="/newsroom/letters/" class="hover:text-union-red transition-colors">Letters</a><span>›</span><span class="truncate">{{ letter.title }}</span>
+  </div>
+  <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white leading-tight mb-3">{{ letter.title }}</h1>
+  <div class="text-sm text-neutral-500 mb-8 pb-6 border-b border-stone-200 dark:border-navy-700">{{ letter.date_issued|date:"j N Y" }}{% if letter.addressed_to %} · Addressed to: {{ letter.addressed_to }}{% endif %}</div>
+  <div class="prose prose-neutral dark:prose-invert max-w-none leading-relaxed">{{ letter.body|safe }}</div>
+</div>
+{% endblock %}

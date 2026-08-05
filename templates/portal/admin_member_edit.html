@@ -1,0 +1,117 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Edit Member — {{ profile.get_full_name }}{% endblock %}
+
+{% block content %}
+<a href="/portal/admin/members/" class="text-sm text-gray-400 hover:text-white mb-6 inline-block">← Back to Members</a>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- Photo Card -->
+    <div class="lg:col-span-1">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6 text-center">
+        {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white/10" alt="" />
+        {% else %}
+        <div class="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center text-4xl font-bold text-gray-400 mx-auto mb-4">{{ profile.get_full_name|first|upper }}</div>
+        {% endif %}
+        <div class="font-bold text-white text-lg">{{ profile.get_full_name }}</div>
+        <div class="text-xs text-gray-400 mt-0.5 mb-4 font-mono">{{ profile.member_id }}</div>
+        <label class="block">
+          <span class="text-xs text-gray-400 block mb-2">Upload Profile Photo</span>
+          <input type="file" name="photo" accept="image/*" class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-gray-700 file:text-white file:text-xs file:cursor-pointer hover:file:bg-gray-600" />
+        </label>
+      </div>
+
+      <!-- Portal Role -->
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6 mt-4">
+        <h3 class="font-semibold text-white text-sm mb-4">Portal Role</h3>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Role</label>
+            <select name="role" class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none">
+              {% for value, label in roles %}
+              <option value="{{ value }}" {% if profile.role == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Managed City (city_admin only)</label>
+            <select name="managed_city" class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none">
+              <option value="">— None —</option>
+              {% for code, name in cities %}
+              <option value="{{ code }}" {% if profile.managed_city == code %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" name="is_active_member" id="is_active" {% if profile.is_active_member %}checked{% endif %} class="rounded" />
+            <label for="is_active" class="text-sm text-gray-300">Active Member</label>
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Membership Valid Until</label>
+            <input type="date" name="membership_valid_until" value="{{ profile.membership_valid_until|date:'Y-m-d' }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="lg:col-span-2 space-y-5">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Personal Details</h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">First Name</label>
+            <input type="text" name="first_name" value="{{ profile.user.first_name }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Last Name</label>
+            <input type="text" name="last_name" value="{{ profile.user.last_name }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Email</label>
+            <input type="email" name="email" value="{{ profile.user.email }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Designation</label>
+            <input type="text" name="designation" value="{{ profile.designation }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="text-xs text-gray-400 block mb-1">Organization</label>
+            <input type="text" name="organization" value="{{ profile.organization }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Read-only info -->
+      <div class="bg-gray-900/50 border border-white/5 rounded-2xl p-5">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Account Info (read-only)</h3>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm">
+          <div><span class="text-gray-500 text-xs">Username</span><div class="text-white font-mono">{{ profile.user.username }}</div></div>
+          <div><span class="text-gray-500 text-xs">Member ID</span><div class="text-white font-mono">{{ profile.member_id }}</div></div>
+          <div><span class="text-gray-500 text-xs">City</span><div class="text-white">{{ profile.get_city_display|default:profile.city }}</div></div>
+          <div><span class="text-gray-500 text-xs">Joined</span><div class="text-white">{{ profile.created_at|date:"d M Y" }}</div></div>
+          <div><span class="text-gray-500 text-xs">Membership Type</span><div class="text-white">{{ profile.get_membership_type_display }}</div></div>
+        </div>
+        {% if profile.application %}
+        <a href="/portal/admin/applications/{{ profile.application.pk }}/" class="mt-3 inline-block text-xs text-blue-400 hover:underline">View Original Application →</a>
+        {% endif %}
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="px-6 py-3 bg-union-red hover:bg-red-700 text-white font-semibold text-sm rounded-xl transition-colors">Save Changes</button>
+        <a href="/portal/admin/members/" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium text-sm rounded-xl transition-colors">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Breadcrumb -->
+{% if breadcrumbs %}
+<div class="border-b border-stone-200 dark:border-navy-700 bg-stone-50 dark:bg-navy-900/50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <nav class="flex items-center gap-2 text-sm text-neutral-500 dark:text-stone-400">
+      <a href="/" class="hover:text-union-red transition-colors">Home</a>
+      {% for label, url in breadcrumbs %}
+      <span>›</span>
+      {% if url %}
+      <a href="{{ url }}" class="hover:text-union-red transition-colors">{{ label }}</a>
+      {% else %}
+      <span class="text-neutral-800 dark:text-white font-medium">{{ label }}</span>
+      {% endif %}
+      {% endfor %}
+    </nav>
+  </div>
+</div>
+{% endif %}
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white mb-8">
+    {{ page.title }}
+  </h1>
+  <div class="prose prose-neutral dark:prose-invert max-w-none leading-relaxed text-neutral-800 dark:text-stone-200">
+    <!-- Support both 'body' (StaticPage model) and 'content' (plain dict) -->
+    {% if page.body %}{{ page.body|safe }}{% endif %}
+    {% if page.content %}{{ page.content|safe }}{% endif %}
+  </div>
+
+  <div class="mt-12 pt-8 border-t border-stone-200 dark:border-navy-700">
+    <a href="/about/" class="text-sm text-neutral-500 dark:text-stone-400 hover:text-union-red transition-colors">← Back to About</a>
+  </div>
+</div>
+
+{% endblock %}

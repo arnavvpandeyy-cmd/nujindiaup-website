@@ -1,0 +1,148 @@
+[
+  {
+    "model": "core.sitesettings",
+    "pk": 1,
+    "fields": {
+      "site_name": "National Union of Journalists (Uttar Pradesh)",
+      "site_short_name": "NUJ UP",
+      "tagline": "Defending Press Freedom and Journalists' Rights Across Uttar Pradesh",
+      "logo": "",
+      "logo_dark": "",
+      "favicon": "",
+      "office_address": "NUJ Uttar Pradesh Secretariat\nLucknow - 226001\nUttar Pradesh, India",
+      "phone": "7054000149",
+      "email": "info@nujup.org",
+      "membership_email": "membership@nujup.org",
+      "contact_email": "contact@nujup.org",
+      "facebook_url": "https://facebook.com/nujup",
+      "twitter_url": "https://twitter.com/nujup",
+      "instagram_url": "",
+      "youtube_url": "",
+      "linkedin_url": "",
+      "whatsapp_number": "",
+      "footer_about": "NUJ Uttar Pradesh is the state organisation of journalists committed to defending press freedom, protecting the rights of working journalists, and upholding democracy across Uttar Pradesh.",
+      "copyright_text": "\u00a9 National Union of Journalists (Uttar Pradesh). All rights reserved.",
+      "member_count": 5000,
+      "state_units_count": 75,
+      "years_of_service": 60,
+      "google_analytics_id": "",
+      "google_search_console": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "people.officebearer",
+    "pk": 1,
+    "fields": {
+      "name": "Ramesh Chandra Pandey",
+      "slug": "ramesh-chandra-pandey",
+      "role": "President",
+      "category": "president",
+      "state": "LKO",
+      "zone": "",
+      "bio": "Ramesh Chandra Pandey is a veteran journalist with over 30 years of experience in print and digital media in Uttar Pradesh. He has been a strong advocate for press freedom and journalists' welfare.",
+      "photo": "",
+      "email": "president@nujup.org",
+      "phone": "",
+      "show_contact": true,
+      "term_start": "2022-01-01",
+      "term_end": "2026-01-01",
+      "is_featured": true,
+      "is_published": true,
+      "order": 1,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "people.officebearer",
+    "pk": 2,
+    "fields": {
+      "name": "Sunita Verma",
+      "slug": "sunita-verma",
+      "role": "Secretary General",
+      "category": "secretary_general",
+      "state": "KNP",
+      "zone": "",
+      "bio": "Sunita Verma has been instrumental in strengthening NUJ UP's membership networks and inter-city coordination over the past decade.",
+      "photo": "",
+      "email": "secretary@nujup.org",
+      "phone": "",
+      "show_contact": true,
+      "term_start": "2022-01-01",
+      "term_end": "2026-01-01",
+      "is_featured": true,
+      "is_published": true,
+      "order": 2,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "newsroom.newscategory",
+    "pk": 1,
+    "fields": {
+      "name": "Press Freedom",
+      "slug": "press-freedom",
+      "color": "#b91c1c",
+      "order": 1
+    }
+  },
+  {
+    "model": "newsroom.newscategory",
+    "pk": 2,
+    "fields": {
+      "name": "Union Affairs",
+      "slug": "union-affairs",
+      "color": "#1a2744",
+      "order": 2
+    }
+  },
+  {
+    "model": "newsroom.newscategory",
+    "pk": 3,
+    "fields": {
+      "name": "Media Industry",
+      "slug": "media-industry",
+      "color": "#92400e",
+      "order": 3
+    }
+  },
+  {
+    "model": "documents.documentcategory",
+    "pk": 1,
+    "fields": { "name": "Circulars", "slug": "circulars", "icon": "", "order": 1 }
+  },
+  {
+    "model": "documents.documentcategory",
+    "pk": 2,
+    "fields": { "name": "Notices", "slug": "notices", "icon": "", "order": 2 }
+  },
+  {
+    "model": "documents.documentcategory",
+    "pk": 3,
+    "fields": { "name": "Reports", "slug": "reports", "icon": "", "order": 3 }
+  },
+  {
+    "model": "documents.documentcategory",
+    "pk": 4,
+    "fields": { "name": "Policy Documents", "slug": "policy-documents", "icon": "", "order": 4 }
+  },
+  {
+    "model": "core.announcement",
+    "pk": 1,
+    "fields": {
+      "title": "Membership Drive 2024 — Apply Now",
+      "body": "NUJ Uttar Pradesh invites eligible journalists across UP to apply for membership. Applications are open until December 31, 2024.",
+      "link": "/membership/apply/",
+      "link_label": "Apply Now",
+      "priority": "important",
+      "is_published": true,
+      "expires_at": null,
+      "order": 1,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]

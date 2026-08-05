@@ -1,0 +1,116 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Hero Slideshow Photos{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="font-bold text-white text-xl">Homepage Hero Banner Photos</h2>
+      <p class="text-xs text-gray-400 mt-1">Upload and manage photos displayed in the main hero banner slideshow on the homepage.</p>
+    </div>
+    <a href="/" target="_blank" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-lg transition-colors">
+      👁 View Live Homepage
+    </a>
+  </div>
+
+  <!-- Upload Slide Form -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+    <h3 class="font-bold text-white text-base mb-4">📸 Upload New Banner Photo</h3>
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add">
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1">Slide Title / Caption *</label>
+          <input type="text" name="title" placeholder="e.g. Executive Committee Meeting 2026..." required class="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1">Upload Photo / Banner Image *</label>
+          <input type="file" name="image" accept="image/*" required class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-union-red file:text-white hover:file:bg-red-700 cursor-pointer" />
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1">Target Link (Optional)</label>
+          <input type="text" name="link" placeholder="e.g. /newsroom/news/15/ or https://..." class="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-gray-300 mb-1">Display Order</label>
+          <input type="number" name="order" value="0" class="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button type="submit" class="px-6 py-2.5 bg-union-red hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors">
+          + Add to Homepage Slideshow
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Slides List -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-b border-white/5 font-semibold text-white text-sm flex items-center justify-between">
+      <span>Uploaded Hero Banner Photos ({{ slides.count }})</span>
+      <span class="text-xs text-gray-400 font-normal">Photos appear in order on the main homepage banner</span>
+    </div>
+
+    {% if slides %}
+    <div class="divide-y divide-white/5">
+      {% for slide in slides %}
+      <div class="p-4 flex items-center gap-4 hover:bg-white/2 transition-colors">
+        <!-- Thumbnail -->
+        <div class="w-24 h-16 rounded-lg overflow-hidden bg-gray-800 flex-shrink-0 border border-white/10">
+          {% if slide.image %}
+          <img src="{{ slide.image.url }}" alt="{{ slide.title }}" class="w-full h-full object-cover" />
+          {% else %}
+          <div class="w-full h-full flex items-center justify-center text-gray-500 text-xs">No Image</div>
+          {% endif %}
+        </div>
+
+        <!-- Info -->
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-white text-sm truncate">{{ slide.title }}</div>
+          {% if slide.link %}
+          <a href="{{ slide.link }}" target="_blank" class="text-xs text-blue-400 hover:underline block truncate mt-0.5">🔗 {{ slide.link }}</a>
+          {% endif %}
+          <div class="text-[11px] text-gray-500 mt-1">Order: {{ slide.order }} · Added {{ slide.created_at|date:"d M Y, H:i" }}</div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <form method="post" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="toggle">
+            <input type="hidden" name="slide_id" value="{{ slide.pk }}">
+            <button type="submit" class="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors {% if slide.is_published %}bg-green-900/50 text-green-300 border border-green-500/20{% else %}bg-gray-800 text-gray-400 border border-white/10{% endif %}">
+              {% if slide.is_published %}Active{% else %}Hidden{% endif %}
+            </button>
+          </form>
+
+          <form method="post" class="inline" onsubmit="return confirm('Delete this slideshow photo?')">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="slide_id" value="{{ slide.pk }}">
+            <button type="submit" class="text-xs px-3 py-1.5 bg-red-900/40 hover:bg-red-900/70 text-red-300 rounded-lg transition-colors border border-red-500/20">Delete</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="py-16 text-center text-gray-500 text-sm">
+      No custom hero banner photos uploaded yet.<br/>
+      <span class="text-xs text-gray-600 mt-1 block">Upload photos above to display them directly on the homepage banner.</span>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

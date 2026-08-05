@@ -1,0 +1,134 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}{% if bearer %}Edit Bearer{% else %}Add Office Bearer{% endif %}{% endblock %}
+
+{% block content %}
+<a href="/portal/admin/office-bearers/" class="text-sm text-gray-400 hover:text-white mb-6 inline-block">← Back to Office Bearers</a>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- Photo + Visibility -->
+    <div class="lg:col-span-1 space-y-5">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6 text-center">
+        {% if bearer and bearer.photo %}
+        <img src="{{ bearer.photo.url }}" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white/10" alt="" />
+        {% else %}
+        <div class="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center text-4xl text-gray-400 mx-auto mb-4">👤</div>
+        {% endif %}
+        <label class="block">
+          <span class="text-xs text-gray-400 block mb-2">Upload Photo</span>
+          <input type="file" name="photo" accept="image/*"
+            class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-gray-700 file:text-white file:text-xs file:cursor-pointer hover:file:bg-gray-600" />
+        </label>
+        <p class="text-xs text-gray-500 mt-2">Square photo recommended (300×300px)</p>
+      </div>
+
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Visibility</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" name="is_published" id="is_pub" {% if not bearer or bearer.is_published %}checked{% endif %} class="rounded" />
+            <label for="is_pub" class="text-sm text-gray-300">Published</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" name="is_featured" id="is_feat" {% if bearer and bearer.is_featured %}checked{% endif %} class="rounded" />
+            <label for="is_feat" class="text-sm text-gray-300">Featured (shown on homepage)</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" name="show_contact" id="show_contact" {% if bearer and bearer.show_contact %}checked{% endif %} class="rounded" />
+            <label for="show_contact" class="text-sm text-gray-300">Show phone/email publicly</label>
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Display Order</label>
+            <input type="number" name="order" value="{{ bearer.order|default:0 }}" min="0"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Term</h3>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Term Start</label>
+            <input type="date" name="term_start" value="{{ bearer.term_start|date:'Y-m-d'|default:'' }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Term End</label>
+            <input type="date" name="term_end" value="{{ bearer.term_end|date:'Y-m-d'|default:'' }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Details -->
+    <div class="lg:col-span-2 space-y-5">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Identity & Role</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Full Name *</label>
+            <input type="text" name="name" value="{{ bearer.name|default:'' }}" required placeholder="e.g., Ramesh Kumar Sharma"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Designation / Role *</label>
+            <input type="text" name="role" value="{{ bearer.role|default:'' }}" required placeholder="e.g., President, General Secretary"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Category</label>
+              <select name="category" class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none">
+                {% for value, label in categories %}
+                <option value="{{ value }}" {% if bearer and bearer.category == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">City (if city-level)</label>
+              <select name="state" class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none">
+                <option value="">— State Level (UP) —</option>
+                {% for code, name in cities %}
+                <option value="{{ code }}" {% if bearer and bearer.state == code %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Bio & Contact</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Short Bio</label>
+            <textarea name="bio" rows="4" placeholder="Brief professional background..."
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none resize-none">{{ bearer.bio|default:'' }}</textarea>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Phone</label>
+              <input type="tel" name="phone" value="{{ bearer.phone|default:'' }}"
+                class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+            </div>
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Email</label>
+              <input type="email" name="email" value="{{ bearer.email|default:'' }}"
+                class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="px-6 py-3 bg-union-red hover:bg-red-700 text-white font-semibold text-sm rounded-xl transition-colors">Save Bearer</button>
+        <a href="/portal/admin/office-bearers/" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium text-sm rounded-xl transition-colors">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Super Admin Dashboard — NUJ UP{% endblock %}
+
+{% block content %}
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+  <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
+    <div class="text-3xl font-bold text-white mb-1">{{ total_members }}</div>
+    <div class="text-sm text-gray-400">Active Members</div>
+    <a href="/portal/admin/members/" class="text-xs text-union-red mt-2 inline-block hover:underline">View all →</a>
+  </div>
+  <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
+    <div class="text-3xl font-bold {% if pending_applications > 0 %}text-amber-400{% else %}text-white{% endif %} mb-1">{{ pending_applications }}</div>
+    <div class="text-sm text-gray-400">Pending Applications</div>
+    <a href="/portal/admin/applications/" class="text-xs text-union-red mt-2 inline-block hover:underline">Review →</a>
+  </div>
+  <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
+    <div class="text-3xl font-bold text-white mb-1">{{ total_city_units }}</div>
+    <div class="text-sm text-gray-400">City Units (of 75)</div>
+    <a href="/portal/admin/city-units/" class="text-xs text-union-red mt-2 inline-block hover:underline">Manage →</a>
+  </div>
+  <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
+    <div class="text-3xl font-bold text-white mb-1">{{ total_news }}</div>
+    <div class="text-sm text-gray-400">Published News</div>
+    <a href="/portal/admin/news/" class="text-xs text-union-red mt-2 inline-block hover:underline">Manage →</a>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="mb-8">
+  <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Quick Actions</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    {% for label, url, icon in quick_actions %}
+    <a href="{{ url }}" class="group bg-gray-900 border border-white/5 rounded-xl p-4 text-center hover:border-union-red/40 hover:bg-gray-800 transition-all">
+      <div class="text-2xl mb-2">{{ icon }}</div>
+      <div class="text-xs font-medium text-gray-300 group-hover:text-white transition-colors">{{ label }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+
+  <!-- Recent Applications -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+      <h2 class="font-semibold text-white text-sm">Pending Applications</h2>
+      <a href="/portal/admin/applications/" class="text-xs text-union-red hover:underline">View all →</a>
+    </div>
+    {% if recent_applications %}
+    <div class="divide-y divide-white/5">
+      {% for app in recent_applications %}
+      <div class="px-5 py-3 flex items-center justify-between gap-4 hover:bg-white/2 transition-colors">
+        <div class="min-w-0">
+          <div class="text-sm font-medium text-white truncate">{{ app.full_name }}</div>
+          <div class="text-xs text-gray-500">{{ app.organization }} · {{ app.get_state_display }}</div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <span class="text-xs px-2 py-0.5 rounded-full
+            {% if app.status == 'submitted' %}bg-blue-900/50 text-blue-300
+            {% elif app.status == 'under_review' %}bg-amber-900/50 text-amber-300
+            {% else %}bg-gray-700 text-gray-300{% endif %}">
+            {{ app.get_status_display }}
+          </span>
+          <a href="/portal/admin/applications/{{ app.pk }}/" class="text-xs text-gray-400 hover:text-white transition-colors">Review</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="px-5 py-8 text-center text-sm text-gray-500">No pending applications.</div>
+    {% endif %}
+  </div>
+
+  <!-- Recent Members -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+      <h2 class="font-semibold text-white text-sm">Recently Added Members</h2>
+      <a href="/portal/admin/members/" class="text-xs text-union-red hover:underline">View all →</a>
+    </div>
+    {% if recent_members %}
+    <div class="divide-y divide-white/5">
+      {% for profile in recent_members %}
+      <div class="px-5 py-3 flex items-center gap-3 hover:bg-white/2 transition-colors">
+        {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" class="w-8 h-8 rounded-full object-cover flex-shrink-0" alt="" />
+        {% else %}
+        <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-300 flex-shrink-0">{{ profile.get_full_name|first|upper }}</div>
+        {% endif %}
+        <div class="min-w-0 flex-1">
+          <div class="text-sm font-medium text-white truncate">{{ profile.get_full_name }}</div>
+          <div class="text-xs text-gray-500 truncate">{{ profile.member_id }} · {{ profile.city }}</div>
+        </div>
+        <span class="text-xs px-2 py-0.5 rounded-full bg-gray-700 text-gray-300 flex-shrink-0">{{ profile.get_role_display }}</span>
+        <a href="/portal/admin/members/{{ profile.pk }}/edit/" class="text-xs text-gray-400 hover:text-white flex-shrink-0">Edit</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="px-5 py-8 text-center text-sm text-gray-500">No members yet.</div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Django Admin shortcut -->
+<div class="mt-6 bg-gray-900/50 border border-white/5 rounded-xl p-4 flex items-center justify-between">
+  <div>
+    <div class="text-sm font-medium text-gray-300">Need advanced database operations?</div>
+    <div class="text-xs text-gray-500 mt-0.5">Use the Django Admin Panel for raw database access, migrations, and advanced queries.</div>
+  </div>
+  <a href="/nuj-admin/" target="_blank" class="flex-shrink-0 text-xs px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium">Open Django Admin →</a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Pass quick actions from Django context isn't ideal — inline them here
+</script>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}{% if unit %}Edit City Unit{% else %}Add City Unit{% endif %}{% endblock %}
+
+{% block content %}
+<a href="/portal/admin/city-units/" class="text-sm text-gray-400 hover:text-white mb-6 inline-block">← Back to City Units</a>
+
+<form method="post" enctype="multipart/form-data" id="city-unit-form">
+  {% csrf_token %}
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- Basic Info + Cover Image -->
+    <div class="lg:col-span-1 space-y-5">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Cover Image</h3>
+        {% if unit.cover_image %}
+        <img src="{{ unit.cover_image.url }}" class="w-full h-28 object-cover rounded-xl mb-3" alt="" />
+        {% endif %}
+        <input type="file" name="cover_image" accept="image/*"
+          class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-gray-700 file:text-white file:text-xs file:cursor-pointer hover:file:bg-gray-600" />
+        <p class="text-xs text-gray-500 mt-2">Recommended: 800×500px landscape photo</p>
+      </div>
+
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Basic Details</h3>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Unit Name *</label>
+            <input type="text" name="name" value="{{ unit.name|default:'' }}" required
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">City / District *</label>
+            <select name="state" required class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none">
+              <option value="">Select city...</option>
+              {% for code, name in cities %}
+              <option value="{{ code }}" {% if unit and unit.state == code %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Established Year</label>
+            <input type="number" name="established_year" value="{{ unit.established_year|default:'' }}" min="1950" max="2030"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Member Count</label>
+            <input type="number" name="member_count" value="{{ unit.member_count|default:'' }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" name="is_published" id="is_pub" {% if unit.is_published or not unit %}checked{% endif %} class="rounded" />
+            <label for="is_pub" class="text-sm text-gray-300">Published (visible on site)</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Contact Info</h3>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Phone</label>
+            <input type="tel" name="phone" value="{{ unit.phone|default:'' }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Email</label>
+            <input type="email" name="email" value="{{ unit.email|default:'' }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Website</label>
+            <input type="url" name="website" value="{{ unit.website|default:'' }}" placeholder="https://..."
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Office Address</label>
+            <textarea name="address" rows="3"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none resize-none">{{ unit.address|default:'' }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description + Position Holders -->
+    <div class="lg:col-span-2 space-y-5">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Description</h3>
+        <textarea name="description" rows="5" placeholder="Brief description of this city unit..."
+          class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none resize-none">{{ unit.description|default:'' }}</textarea>
+      </div>
+
+      <!-- Position Holders -->
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="font-semibold text-white text-sm">Position Holders</h3>
+          <button type="button" onclick="addMember()" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">+ Add Person</button>
+        </div>
+        <div id="members-list" class="space-y-4">
+          {% if members %}
+          {% for m in members %}
+          <div class="member-entry bg-gray-800 border border-white/5 rounded-xl p-4">
+            <div class="grid sm:grid-cols-2 gap-3 mb-3">
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Full Name *</label>
+                <input type="text" name="member_name" value="{{ m.name }}" required placeholder="e.g., Ramesh Kumar"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Role / Designation *</label>
+                <input type="text" name="member_role" value="{{ m.role }}" placeholder="e.g., President, Secretary"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Phone</label>
+                <input type="tel" name="member_phone" value="{{ m.phone }}"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Email</label>
+                <input type="email" name="member_email" value="{{ m.email }}"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              {% if m.photo %}
+              <img src="{{ m.photo.url }}" class="w-10 h-10 rounded-full object-cover border border-white/10" alt="" />
+              {% endif %}
+              <div class="flex-1">
+                <label class="text-xs text-gray-400 block mb-1">Photo (passport-size)</label>
+                <input type="file" name="member_photo_{{ forloop.counter0 }}" accept="image/*"
+                  class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-700 file:text-white file:text-xs" />
+              </div>
+              <button type="button" onclick="this.closest('.member-entry').remove()" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 transition-colors">Remove</button>
+            </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+
+        <div id="member-template" class="hidden">
+          <div class="member-entry bg-gray-800 border border-white/5 rounded-xl p-4">
+            <div class="grid sm:grid-cols-2 gap-3 mb-3">
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Full Name *</label>
+                <input type="text" name="member_name" required placeholder="e.g., Ramesh Kumar"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Role / Designation *</label>
+                <input type="text" name="member_role" placeholder="e.g., President, Secretary"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Phone</label>
+                <input type="tel" name="member_phone"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+              <div>
+                <label class="text-xs text-gray-400 block mb-1">Email</label>
+                <input type="email" name="member_email"
+                  class="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="flex-1">
+                <label class="text-xs text-gray-400 block mb-1">Photo</label>
+                <input type="file" name="member_photo_NEW" accept="image/*"
+                  class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-700 file:text-white file:text-xs" />
+              </div>
+              <button type="button" onclick="this.closest('.member-entry').remove()" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 transition-colors">Remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="px-6 py-3 bg-union-red hover:bg-red-700 text-white font-semibold text-sm rounded-xl transition-colors">Save City Unit</button>
+        <a href="/portal/admin/city-units/" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium text-sm rounded-xl transition-colors">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function addMember() {
+  const template = document.getElementById('member-template').querySelector('.member-entry');
+  const clone = template.cloneNode(true);
+  // Update photo input names with index
+  const count = document.querySelectorAll('.member-entry').length;
+  clone.querySelectorAll('input[name="member_photo_NEW"]').forEach(el => {
+    el.name = `member_photo_${count}`;
+  });
+  document.getElementById('members-list').appendChild(clone);
+}
+</script>
+{% endblock %}

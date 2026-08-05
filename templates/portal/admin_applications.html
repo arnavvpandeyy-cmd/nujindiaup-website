@@ -1,0 +1,63 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Membership Applications{% endblock %}
+
+{% block content %}
+
+<!-- Filter Bar -->
+<div class="flex flex-wrap gap-2 mb-6">
+  {% for value, label in status_choices %}
+  <a href="?status={{ value }}"
+     class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
+       {% if status_filter == value %}bg-union-red text-white{% else %}bg-gray-800 text-gray-300 hover:bg-gray-700{% endif %}">
+    {{ label }}
+  </a>
+  {% endfor %}
+  <a href="?" class="px-4 py-2 rounded-lg text-sm font-medium bg-gray-800 text-gray-400 hover:bg-gray-700 transition-colors">All</a>
+</div>
+
+<!-- Applications Table -->
+<div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+  <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+    <h2 class="font-semibold text-white text-sm">{{ applications.count }} Application{{ applications.count|pluralize }}</h2>
+  </div>
+  {% if applications %}
+  <div class="divide-y divide-white/5">
+    {% for app in applications %}
+    <div class="px-5 py-4 hover:bg-white/2 transition-colors">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="font-semibold text-white text-sm">{{ app.full_name }}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full
+              {% if app.status == 'submitted' %}bg-blue-900/60 text-blue-300
+              {% elif app.status == 'under_review' %}bg-amber-900/60 text-amber-300
+              {% elif app.status == 'approved' %}bg-green-900/60 text-green-300
+              {% elif app.status == 'rejected' %}bg-red-900/60 text-red-300
+              {% else %}bg-gray-700 text-gray-300{% endif %}">
+              {{ app.get_status_display }}
+            </span>
+          </div>
+          <div class="text-xs text-gray-400 space-x-3">
+            <span>{{ app.reference_number }}</span>
+            <span>·</span>
+            <span>{{ app.designation }} at {{ app.organization }}</span>
+            <span>·</span>
+            <span>{{ app.get_state_display }}</span>
+            {% if app.submitted_at %}<span>·</span><span>{{ app.submitted_at|date:"d M Y" }}</span>{% endif %}
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <a href="/portal/admin/applications/{{ app.pk }}/" class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs font-medium rounded-lg transition-colors">
+            Review →
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="py-16 text-center text-gray-500">No applications with this status.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

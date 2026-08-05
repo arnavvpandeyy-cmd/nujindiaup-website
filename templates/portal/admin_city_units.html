@@ -1,0 +1,51 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}City Units{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <form method="get" class="flex-1 max-w-sm">
+    <input type="text" name="q" value="{{ q }}" placeholder="Search city units..."
+      class="w-full bg-gray-900 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:ring-1 focus:ring-union-red outline-none" />
+  </form>
+  <a href="/portal/admin/city-units/add/" class="ml-4 px-4 py-2.5 bg-union-red hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">+ Add City Unit</a>
+</div>
+
+<div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+  <div class="px-5 py-4 border-b border-white/5">
+    <h2 class="text-sm font-semibold text-white">{{ units.count }} City Unit{{ units.count|pluralize }} (of 75 UP districts)</h2>
+  </div>
+  {% if units %}
+  <div class="divide-y divide-white/5">
+    {% for unit in units %}
+    <div class="px-5 py-3.5 flex items-center gap-4 hover:bg-white/2 transition-colors">
+      {% if unit.cover_image %}
+      <img src="{{ unit.cover_image.url }}" class="w-12 h-8 rounded-md object-cover flex-shrink-0" alt="" />
+      {% else %}
+      <div class="w-12 h-8 bg-gray-700 rounded-md flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0">{{ unit.state }}</div>
+      {% endif %}
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-medium text-white">{{ unit.name }}</span>
+          {% if unit.is_published %}<span class="text-xs px-2 py-0.5 rounded-full bg-green-900/50 text-green-300">Live</span>
+          {% else %}<span class="text-xs px-2 py-0.5 rounded-full bg-gray-700 text-gray-400">Draft</span>{% endif %}
+        </div>
+        <div class="text-xs text-gray-500 mt-0.5">
+          {{ unit.get_state_display }} · {{ unit.member_count|default:"—" }} members · {{ unit.members.count }} office bearers
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a href="/city-units/{{ unit.slug }}/" target="_blank" class="text-xs text-gray-400 hover:text-white transition-colors">View ↗</a>
+        <a href="/portal/admin/city-units/{{ unit.pk }}/edit/" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Edit</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="py-16 text-center text-gray-500">
+    <p class="mb-3">No city units yet.</p>
+    <a href="/portal/admin/city-units/add/" class="text-union-red hover:underline text-sm">Add the first city unit →</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

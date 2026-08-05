@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="mb-8">
+    <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-union-red"></span><span class="text-xs font-semibold uppercase tracking-widest text-union-red bilingual-heading" data-hi="NUJ यूपी नेटवर्क">NUJ UP Network</span></div>
+    <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="सिटी यूनिट्स">City Units</h1>
+    <p class="text-neutral-600 dark:text-stone-400 mt-2">NUJ Uttar Pradesh is represented across major cities and districts of UP.</p>
+  </div>
+  {% if units %}
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for unit in units %}
+    <a href="/city-units/{{ unit.slug }}/" class="group bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-union-red hover:shadow-md transition-all block">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 bg-navy-100 dark:bg-navy-700 rounded-lg flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300">{{ unit.name|slice:":2"|upper }}</div>
+        <div class="font-semibold text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">{{ unit.name }}</div>
+      </div>
+      {% if unit.email %}<div class="text-xs text-navy-600 dark:text-amber-400 mt-1">{{ unit.email }}</div>{% endif %}
+      {% if unit.member_count %}<div class="text-xs text-neutral-400 dark:text-stone-500 mt-1">{{ unit.member_count }} members</div>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-16">
+    <div class="text-4xl mb-4">🏙️</div>
+    <p class="text-neutral-500 dark:text-stone-400 font-medium mb-2">No city units listed yet.</p>
+    <p class="text-sm text-neutral-400 dark:text-stone-500 mb-4">Go to Admin → People → City Units to add NUJ UP's 75 district units.</p>
+    <a href="/nuj-admin/people/stateunit/add/" class="inline-block text-sm font-medium text-navy-600 dark:text-amber-400 hover:underline">Add a City Unit in Admin →</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

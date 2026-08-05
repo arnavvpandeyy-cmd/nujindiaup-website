@@ -1,0 +1,45 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Office Bearers{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <p class="text-sm text-gray-400">UP-level office bearers shown on the homepage and Bearers page.</p>
+  <a href="/portal/admin/office-bearers/add/" class="px-4 py-2.5 bg-union-red hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">+ Add Bearer</a>
+</div>
+
+<div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+  <div class="px-5 py-4 border-b border-white/5">
+    <h2 class="text-sm font-semibold text-white">{{ bearers.count }} Office Bearer{{ bearers.count|pluralize }}</h2>
+  </div>
+  {% if bearers %}
+  <div class="divide-y divide-white/5">
+    {% for bearer in bearers %}
+    <div class="px-5 py-3.5 flex items-center gap-4 hover:bg-white/2 transition-colors">
+      {% if bearer.photo %}
+      <img src="{{ bearer.photo.url }}" class="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-white/10" alt="" />
+      {% else %}
+      <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-300 flex-shrink-0">{{ bearer.name|first|upper }}</div>
+      {% endif %}
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-sm font-medium text-white">{{ bearer.name }}</span>
+          {% if bearer.is_featured %}<span class="text-xs px-2 py-0.5 rounded-full bg-amber-900/50 text-amber-300">Featured</span>{% endif %}
+          {% if not bearer.is_published %}<span class="text-xs px-2 py-0.5 rounded-full bg-gray-700 text-gray-400">Draft</span>{% endif %}
+        </div>
+        <div class="text-xs text-gray-500 mt-0.5">{{ bearer.role }} · {{ bearer.get_category_display }}</div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a href="/office-bearers/{{ bearer.slug }}/" target="_blank" class="text-xs text-gray-400 hover:text-white transition-colors">View ↗</a>
+        <a href="/portal/admin/office-bearers/{{ bearer.pk }}/edit/" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Edit</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="py-16 text-center text-gray-500">
+    No office bearers yet. <a href="/portal/admin/office-bearers/add/" class="text-union-red hover:underline">Add the first one →</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

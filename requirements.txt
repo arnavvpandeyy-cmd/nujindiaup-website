@@ -1,0 +1,57 @@
+# ============================================================
+# NUJ India — Python Dependencies
+# ============================================================
+
+# Core Django
+Django==5.0.6
+psycopg2-binary==2.9.9          # PostgreSQL adapter
+python-dotenv==1.0.1             # .env file loading
+
+# Rich text editor
+django-ckeditor-5==0.2.13
+
+# HTMX integration
+django-htmx==1.19.0
+
+# Static files
+whitenoise==6.7.0
+
+# Media/image handling
+Pillow==10.4.0
+
+# Tagging (for news/documents)
+django-taggit==5.0.1
+
+# Extensions (shell_plus, etc.)
+django-extensions==3.2.3
+
+# Form utils
+django-crispy-forms==2.3
+
+# Rate limiting
+django-ratelimit==4.1.0
+
+# Slugify
+python-slugify==8.0.4
+
+# Email validation
+email-validator==2.2.0
+
+# Timezone
+pytz==2024.1
+
+# Testing
+pytest==8.2.2
+pytest-django==4.8.0
+factory-boy==3.3.0
+
+# Code quality (dev)
+black==24.4.2
+flake8==7.1.0
+isort==5.13.2
+
+# Production server
+gunicorn==22.0.0
+
+# Security
+django-axes==6.5.0              # Brute force protection

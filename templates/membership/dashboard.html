@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <div>
+      <div class="flex items-center gap-2 mb-1"><span class="w-5 h-0.5 bg-union-red"></span><span class="text-xs font-semibold uppercase tracking-widest text-union-red">Member Portal</span></div>
+      <h1 class="font-serif text-2xl font-bold text-neutral-900 dark:text-white">Welcome, {{ profile.get_full_name }}</h1>
+      <p class="text-sm text-neutral-500 dark:text-stone-400 mt-0.5">Member ID: <span class="font-mono font-semibold text-navy-600 dark:text-amber-400">{{ profile.member_id }}</span></p>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+      {% if user.is_superuser or user.is_staff or profile.role == 'super_admin' %}
+      <a href="/portal/admin-panel/" class="px-4 py-2 text-sm font-semibold bg-red-700 text-white rounded-lg hover:bg-red-800 transition-colors">🛡️ Admin Panel</a>
+      {% endif %}
+      {% if profile.role == 'city_admin' %}
+      <a href="/portal/city-admin/" class="px-4 py-2 text-sm font-semibold bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors">🏙️ City Admin</a>
+      {% endif %}
+      <a href="/portal/dashboard/" class="px-4 py-2 text-sm font-medium bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors">🗺️ City Dashboard</a>
+      <a href="{% url 'membership:card' %}" class="px-4 py-2 text-sm font-medium bg-navy-600 text-white rounded-lg hover:bg-navy-700 transition-colors">🪪 My Card</a>
+      <a href="{% url 'membership:profile_edit' %}" class="px-4 py-2 text-sm font-medium border border-stone-300 dark:border-navy-600 text-neutral-700 dark:text-stone-300 rounded-lg hover:bg-stone-50 dark:hover:bg-navy-800 transition-colors">✏️ Edit Profile</a>
+      <a href="{% url 'membership:logout' %}" class="px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:underline transition-colors">Logout</a>
+    </div>
+  </div>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="mb-6 px-4 py-3 rounded-lg text-sm font-medium {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-green-50 text-green-700 border border-green-200{% endif %}">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- Profile Card -->
+    <div class="lg:col-span-1">
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 text-center">
+        <!-- Photo -->
+        <div class="mb-4">
+          {% if profile.photo %}
+          <img src="{{ profile.photo.url }}" alt="{{ profile.get_full_name }}"
+            class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-navy-100 dark:border-navy-700 shadow">
+          {% else %}
+          <div class="w-24 h-24 rounded-full mx-auto bg-navy-100 dark:bg-navy-700 flex items-center justify-center text-3xl font-serif font-bold text-navy-600 dark:text-stone-300 shadow">
+            {{ profile.get_full_name|first|upper }}
+          </div>
+          {% endif %}
+        </div>
+        <h2 class="font-serif text-lg font-bold text-neutral-900 dark:text-white">{{ profile.get_full_name }}</h2>
+        <p class="text-sm text-neutral-500 dark:text-stone-400 mt-1">{{ profile.designation|default:"—" }}</p>
+        <p class="text-xs text-neutral-400 dark:text-stone-500">{{ profile.organization|default:"—" }}</p>
+
+        <!-- Status Badge -->
+        <div class="mt-4">
+          {% if profile.is_active_member %}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active Member
+          </span>
+          {% else %}
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Inactive
+          </span>
+          {% endif %}
+        </div>
+
+        {% if profile.membership_valid_until %}
+        <p class="text-xs text-neutral-400 dark:text-stone-500 mt-2">Valid until: <strong class="text-neutral-600 dark:text-stone-300">{{ profile.membership_valid_until|date:"j M Y" }}</strong></p>
+        {% endif %}
+
+        <div class="mt-4 pt-4 border-t border-stone-100 dark:border-navy-700 text-left space-y-2">
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">Member Type</span>
+            <span class="font-medium text-neutral-700 dark:text-stone-300">{{ profile.get_membership_type_display }}</span>
+          </div>
+          {% if profile.city %}
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">City</span>
+            <span class="font-medium text-neutral-700 dark:text-stone-300">{{ profile.get_city_display }}</span>
+          </div>
+          {% endif %}
+          {% if profile.user.email %}
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">Email</span>
+            <span class="font-medium text-neutral-700 dark:text-stone-300 truncate ml-2">{{ profile.user.email }}</span>
+          </div>
+          {% endif %}
+          {% if profile.phone %}
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">Phone</span>
+            <span class="font-medium text-neutral-700 dark:text-stone-300">{{ profile.phone }}</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="lg:col-span-2 space-y-5">
+
+      <!-- Quick actions -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="/portal/dashboard/" class="group bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-blue-500 hover:shadow-md transition-all text-center">
+          <div class="text-2xl mb-2">🗺️</div>
+          <div class="font-semibold text-sm text-neutral-900 dark:text-white group-hover:text-blue-600 transition-colors">City Dashboard</div>
+          <div class="text-xs text-neutral-400 mt-0.5">News &amp; Events</div>
+        </a>
+        <a href="{% url 'membership:card' %}" class="group bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-union-red hover:shadow-md transition-all text-center">
+          <div class="text-2xl mb-2">🪪</div>
+          <div class="font-semibold text-sm text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">My Membership Card</div>
+          <div class="text-xs text-neutral-400 mt-0.5">Download / Print</div>
+        </a>
+        <a href="{% url 'membership:profile_edit' %}" class="group bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-union-red hover:shadow-md transition-all text-center">
+          <div class="text-2xl mb-2">✏️</div>
+          <div class="font-semibold text-sm text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">Edit Profile</div>
+          <div class="text-xs text-neutral-400 mt-0.5">Update your info</div>
+        </a>
+        <a href="{% url 'membership:change_password' %}" class="group bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-union-red hover:shadow-md transition-all text-center">
+          <div class="text-2xl mb-2">🔐</div>
+          <div class="font-semibold text-sm text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">Change Password</div>
+          <div class="text-xs text-neutral-400 mt-0.5">Security</div>
+        </a>
+      </div>
+
+      <!-- Application Info -->
+      {% if profile.application %}
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6">
+        <h3 class="font-serif text-base font-bold text-neutral-900 dark:text-white mb-4">📋 Application Details</h3>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm">
+          <div><span class="text-neutral-500">Reference No.</span><br><span class="font-mono font-semibold text-navy-600 dark:text-amber-400">{{ profile.application.reference_number }}</span></div>
+          <div><span class="text-neutral-500">Status</span><br><span class="font-semibold text-green-600">{{ profile.application.get_status_display }}</span></div>
+          <div><span class="text-neutral-500">Applied On</span><br><span class="font-medium text-neutral-700 dark:text-stone-300">{{ profile.application.submitted_at|date:"j N Y"|default:"—" }}</span></div>
+          <div><span class="text-neutral-500">Experience</span><br><span class="font-medium text-neutral-700 dark:text-stone-300">{{ profile.application.experience_years }} year(s)</span></div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Bio -->
+      {% if profile.bio %}
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6">
+        <h3 class="font-serif text-base font-bold text-neutral-900 dark:text-white mb-3">📝 Bio</h3>
+        <p class="text-sm text-neutral-600 dark:text-stone-400 leading-relaxed">{{ profile.bio }}</p>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

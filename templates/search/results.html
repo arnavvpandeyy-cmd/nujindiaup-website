@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  {# Search Header #}
+  <div class="mb-8">
+    <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white mb-4 bilingual-heading" data-hi="खोज">Search</h1>
+    <form method="get" action="/search/" role="search" class="flex gap-3">
+      <input type="search" name="q" value="{{ query }}" placeholder="Search news, office bearers, documents..."
+             class="flex-1 px-5 py-3 text-base border border-stone-300 dark:border-navy-600 rounded-xl bg-white dark:bg-navy-800 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 focus:border-transparent outline-none"
+             aria-label="Search query" />
+      <button type="submit" class="px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-colors">Search</button>
+    </form>
+  </div>
+
+  {% if query %}
+  <p class="text-neutral-500 dark:text-stone-400 text-sm mb-8">
+    {% if total > 0 %}Found <strong class="text-neutral-900 dark:text-white">{{ total }}</strong> results for "<strong class="text-neutral-900 dark:text-white">{{ query }}</strong>"{% else %}No results found for "<strong>{{ query }}</strong>". Try a different search term.{% endif %}
+  </p>
+
+  {% if total > 0 %}
+  <div class="space-y-10">
+
+    {# News results #}
+    {% if results.news %}
+    <section>
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-4 pb-2 border-b border-stone-200 dark:border-navy-700 bilingual-heading" data-hi="समाचार अपडेट">News Updates ({{ results.news.count }})</h2>
+      <div class="space-y-3">
+        {% for item in results.news %}
+        <a href="/newsroom/news/{{ item.slug }}/" class="group block p-4 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-lg hover:border-navy-500 transition-colors">
+          <div class="font-medium text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">{{ item.title }}</div>
+          <div class="text-sm text-neutral-500 dark:text-stone-400 mt-0.5">{{ item.summary|truncatechars:120 }}</div>
+          <div class="text-xs text-neutral-400 mt-1">{{ item.published_at|date:"d F Y" }}</div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {# Press releases #}
+    {% if results.press %}
+    <section>
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-4 pb-2 border-b border-stone-200 dark:border-navy-700 bilingual-heading" data-hi="प्रेस विज्ञप्ति">Press Releases ({{ results.press.count }})</h2>
+      <div class="space-y-3">
+        {% for item in results.press %}
+        <a href="/newsroom/press-releases/{{ item.slug }}/" class="group block p-4 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-lg hover:border-navy-500 transition-colors">
+          <div class="font-medium text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">{{ item.title }}</div>
+          <div class="text-xs text-neutral-400 mt-1">{{ item.published_at|date:"d F Y" }}</div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {# Office bearers #}
+    {% if results.bearers %}
+    <section>
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-4 pb-2 border-b border-stone-200 dark:border-navy-700 bilingual-heading" data-hi="कार्यालय धारक">Office Bearers ({{ results.bearers.count }})</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        {% for item in results.bearers %}
+        <a href="/office-bearers/{{ item.slug }}/" class="group flex gap-3 p-4 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-lg hover:border-navy-500 transition-colors">
+          {% if item.photo %}
+          <img src="{{ item.photo.url }}" alt="{{ item.name }}" class="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+          {% else %}
+          <div class="w-10 h-10 rounded-full bg-navy-100 dark:bg-navy-700 flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300 flex-shrink-0">{{ item.name|slice:":1" }}</div>
+          {% endif %}
+          <div>
+            <div class="font-medium text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">{{ item.name }}</div>
+            <div class="text-xs text-neutral-500 dark:text-stone-400">{{ item.role }}</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {# Documents #}
+    {% if results.documents %}
+    <section>
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-4 pb-2 border-b border-stone-200 dark:border-navy-700 bilingual-heading" data-hi="दस्तावेज़">Documents ({{ results.documents.count }})</h2>
+      <div class="space-y-3">
+        {% for item in results.documents %}
+        <a href="/documents/{{ item.slug }}/download/" class="group flex gap-3 p-4 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-lg hover:border-navy-500 transition-colors">
+          <svg class="w-5 h-5 text-union-red flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          <div>
+            <div class="font-medium text-neutral-900 dark:text-white group-hover:text-union-red transition-colors">{{ item.title }}</div>
+            <div class="text-xs text-neutral-500 dark:text-stone-400">{{ item.category.name|default:"" }} {% if item.year %}· {{ item.year }}{% endif %}</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="text-center py-16 text-neutral-400 dark:text-stone-500">
+    <svg class="w-14 h-14 mx-auto mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    <p class="font-medium text-lg">Enter a search term above to get started.</p>
+    <p class="text-sm mt-1">You can search news, press releases, office bearers, documents, and more.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

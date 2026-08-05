@@ -1,0 +1,615 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block page_title %}National Union of Journalists (I) Uttar Pradesh — Official Website{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ═══════════════════════════════════════════════════════
+   SKY BLUE LIGHT THEME
+═══════════════════════════════════════════════════════ */
+
+/* ── Top Ticker Bar ── */
+.ticker-bar {
+  background: #0369A1;
+  color: #fff;
+  font-size: 12.5px;
+  padding: 6px 0;
+  overflow: hidden;
+  border-bottom: 3px solid #c41e3a;
+}
+.ticker-content { display: flex; align-items: center; gap: 0; }
+.ticker-label {
+  background: #c41e3a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 0 14px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ticker-scroll { flex: 1; overflow: hidden; height: 28px; display: flex; align-items: center; }
+.ticker-track { display: flex; animation: tickerScroll 40s linear infinite; white-space: nowrap; gap: 60px; }
+.ticker-track span { color: #BAE6FD; }
+.ticker-track span.sep { color: #7DD3FC; font-weight: 700; }
+@keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ── IFJ BAR ── */
+.ifj-bar { background: #f8fafc; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+.ifj-bar-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.ifj-text { display: flex; align-items: center; gap: 12px; color: #334155; font-size: 13.5px; }
+.ifj-badge-pill { background: #0369A1; color: #fff; font-weight: 800; font-size: 11px; padding: 3px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+.ifj-full { font-weight: 600; color: #475569; }
+.ifj-full strong { color: #0f172a; text-decoration: underline; text-decoration-color: rgba(15,23,42,.3); }
+
+/* ── HERO SECTION ── */
+.hero-section {
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+.hero-section::before {
+  display: none !important;
+  content: none !important;
+}
+.hero-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  width: 100%;
+}
+@media (max-width: 768px) { .hero-inner { grid-template-columns: 1fr; } .hero-slideshow { display: none; } }
+.hero-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.hero-eyebrow-line { width: 32px; height: 3px; background: #c41e3a; border-radius: 2px; }
+.hero-eyebrow-text { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: #c41e3a; }
+.hero-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(28px, 3.8vw, 46px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+.hero-title .abbr { color: #c41e3a; }
+.hero-org-full { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(13px,1.4vw,15px); color: #475569; margin-bottom: 18px; font-weight: 500; line-height: 1.5; }
+.hero-ifj-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin-bottom: 20px;
+  font-size: 12.5px;
+  color: #0369a1;
+  font-weight: 600;
+}
+.hero-ifj-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #0284c7; }
+.hero-desc { font-size: 15px; color: #334155; line-height: 1.75; margin-bottom: 28px; max-width: 520px; }
+.hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #c41e3a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background .2s, transform .15s;
+  border: 2px solid #c41e3a;
+  box-shadow: 0 4px 14px rgba(196,30,58,.25);
+}
+.btn-primary:hover { background: #a01830; transform: translateY(-1px); }
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 13px 24px;
+  border-radius: 6px;
+  border: 2px solid #0f172a;
+  text-decoration: none;
+  transition: all .2s;
+}
+.btn-outline:hover { background: #0f172a; color: #fff; }
+
+/* ── HERO SLIDESHOW ── */
+.hero-slideshow {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 400px;
+  box-shadow: 0 20px 45px rgba(15,23,42,.12);
+  border: 1px solid #e2e8f0;
+}
+.slide-track { display: flex; height: 100%; transition: transform .6s cubic-bezier(.4,0,.2,1); }
+.slide { min-width: 100%; height: 100%; position: relative; overflow: hidden; }
+.slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.65) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 20px; }
+.slide-caption { color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; max-width: 300px; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+.slide-dots { position: absolute; bottom: 14px; right: 14px; display: flex; gap: 6px; z-index: 10; }
+.slide-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); cursor: pointer; transition: background .2s, transform .2s; border: none; padding: 0; }
+.slide-dot.active { background: #fff; transform: scale(1.3); }
+.slide-prev, .slide-next {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,.2); backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,.3); color: #fff;
+  width: 36px; height: 36px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; cursor: pointer; font-size: 18px; z-index: 10; transition: background .2s;
+}
+.slide-prev { left: 10px; }
+.slide-next { right: 10px; }
+.slide-prev:hover, .slide-next:hover { background: rgba(255,255,255,.35); }
+.slide-counter { position: absolute; top: 12px; left: 12px; background: rgba(2,132,199,.7); backdrop-filter: blur(4px); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; z-index: 10; }
+
+/* ── STATS BAR ── */
+.stats-bar { background: #fff; border-bottom: 3px solid #BAE6FD; box-shadow: 0 2px 12px rgba(2,132,199,.08); }
+.stats-grid { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: repeat(4,1fr); border-left: 1px solid #BAE6FD; }
+@media (max-width: 640px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+.stat-item { padding: 22px 16px; text-align: center; border-right: 1px solid #BAE6FD; border-bottom: 1px solid #BAE6FD; }
+.stat-number { font-family: Georgia, serif; font-size: 32px; font-weight: 700; color: #0284C7; line-height: 1; }
+.stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-top: 4px; }
+.stat-icon { font-size: 20px; margin-bottom: 4px; }
+
+/* ── SECTION HEADERS ── */
+.section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; }
+.section-kicker { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.kicker-bar { width: 20px; height: 3px; background: #0284C7; border-radius: 2px; }
+.kicker-text { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #0284C7; }
+.section-title { font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: #0C4A6E; }
+.section-link { font-size: 13px; font-weight: 600; color: #0284C7; text-decoration: none; display: flex; align-items: center; gap: 4px; white-space: nowrap; padding-bottom: 4px; border-bottom: 1px solid transparent; transition: border-color .15s, color .15s; }
+.section-link:hover { color: #c41e3a; border-color: #c41e3a; }
+
+/* ── CONTAINERS ── */
+.container-main { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ── NEWS CARDS ── */
+.news-featured-img { width: 100%; height: 280px; object-fit: cover; border-radius: 10px 10px 0 0; display: block; }
+.news-card-body { padding: 16px; }
+.news-card { background: #fff; border: 1px solid #BAE6FD; border-radius: 10px; overflow: hidden; transition: box-shadow .2s, transform .2s; }
+.news-card:hover { box-shadow: 0 8px 24px rgba(2,132,199,.15); transform: translateY(-2px); }
+.news-card-no-img { height: 180px; background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+
+/* ── CONTACT STRIP ── */
+.contact-strip { background: linear-gradient(135deg, #0369A1 0%, #0284C7 100%); padding: 40px 0; border-top: 4px solid #c41e3a; }
+.contact-strip-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; text-align: center; }
+@media (max-width: 640px) { .contact-strip-inner { grid-template-columns: 1fr; } }
+.contact-item-icon { font-size: 28px; margin-bottom: 10px; }
+.contact-item-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #BAE6FD; margin-bottom: 6px; }
+.contact-item-value { color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; }
+.contact-item-value:hover { color: #FDE68A; }
+
+/* ── QUICK ACCESS ── */
+.quick-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border: 1px solid #BAE6FD; border-radius: 10px; overflow: hidden; background: #fff; }
+@media (max-width: 640px) { .quick-grid { grid-template-columns: repeat(2,1fr); } }
+.quick-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 12px; border-right: 1px solid #BAE6FD; border-bottom: 1px solid #BAE6FD; text-decoration: none; transition: background .2s; gap: 8px; }
+.quick-item:hover { background: #EFF6FF; }
+.quick-item:hover .quick-icon { background: #0284C7; color: #fff; }
+.quick-icon { width: 42px; height: 42px; border-radius: 50%; background: #EFF6FF; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background .2s, color .2s; }
+.quick-label { font-size: 12.5px; font-weight: 600; color: #0C4A6E; text-align: center; line-height: 1.3; }
+
+/* ── PRESS RELEASES ── */
+.press-item { padding: 14px 0; border-bottom: 1px solid #E0F2FE; }
+.press-item:last-child { border-bottom: none; }
+.press-date { font-size: 11px; color: #7DD3FC; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.press-title { font-size: 14px; font-weight: 600; color: #0C4A6E; line-height: 1.4; text-decoration: none; }
+.press-title:hover { color: #c41e3a; }
+
+/* ── EVENTS ── */
+.events-section { background: linear-gradient(135deg, #0369A1 0%, #0284C7 100%); padding: 50px 0; border-top: 4px solid #38BDF8; }
+.event-card { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 18px; transition: background .2s; }
+.event-card:hover { background: rgba(255,255,255,.18); }
+
+/* Backgrounds */
+.white-section { background: #fff; }
+.light-section { background: #F0F9FF; }
+
+@media (max-width: 1024px) { .bearers-grid { grid-template-columns: repeat(3,1fr) !important; } }
+@media (max-width: 640px) { .bearers-grid { grid-template-columns: repeat(2,1fr) !important; } }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══ TICKER BAR ══ -->
+<div class="ticker-bar">
+  <div class="container-main">
+    <div class="ticker-content">
+      <div class="ticker-label">🔴 Latest</div>
+      <div class="ticker-scroll">
+        <div class="ticker-track">
+          <span>NUJ (I) Uttar Pradesh — Official Portal</span>
+          <span class="sep">◆</span>
+          <span>Affiliated to International Federation of Journalists (IFJ), Brussels</span>
+          <span class="sep">◆</span>
+          <span>Defending Press Freedom across 75 Districts of Uttar Pradesh</span>
+          <span class="sep">◆</span>
+          <span>Member of National Union of Journalists (India)</span>
+          <span class="sep">◆</span>
+          <span>Contact: +91 94150 49966 | nujlucknow@gmail.com</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IFJ HIGHLIGHT BAR ══ -->
+<div class="ifj-bar">
+  <div class="ifj-bar-inner">
+    <div class="ifj-text">
+      <span class="ifj-badge-pill">🌐 IFJ Affiliated</span>
+      <span class="ifj-full">Affiliated to the <strong>International Federation of Journalists (IFJ)</strong>, Brussels — the world's largest journalists' federation</span>
+    </div>
+    <a href="/about/" style="color:#fcd34d; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap;">Learn More →</a>
+  </div>
+</div>
+
+<!-- ══ HERO SECTION ══ -->
+<section class="hero-section" aria-labelledby="hero-heading">
+  <div class="hero-inner">
+
+    <!-- Left: Text -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span class="hero-eyebrow-text">Official Website · Uttar Pradesh</span>
+      </div>
+
+      <h1 id="hero-heading" class="hero-title">
+        National Union of<br/>
+        Journalists <span class="abbr">(I)</span><br/>
+        <span style="color:#c41e3a;">Uttar Pradesh</span>
+      </h1>
+
+      <p class="hero-org-full">
+        National Union of Journalists (India) — Uttar Pradesh State Unit
+      </p>
+
+      <div class="hero-ifj-badge">
+        <div class="dot"></div>
+        IFJ Member · Press Freedom Since 1964
+      </div>
+
+      <p class="hero-desc">
+        Defending press freedom, protecting journalists' rights, and strengthening
+        the fourth pillar of democracy across all 75 districts of Uttar Pradesh.
+        Affiliated to the <strong style="color:#0284c7;">International Federation of Journalists (IFJ)</strong>, Brussels.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="/membership/apply/" class="btn-primary">
+          Join as Member
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <a href="/about/" class="btn-outline">About NUJ UP</a>
+      </div>
+    </div>
+
+    <!-- Right: Slideshow -->
+    <div class="hero-slideshow" id="heroSlideshow">
+      <div class="slide-counter" id="slideCounter">1 / 10</div>
+
+      <div class="slide-track" id="slideTrack">
+
+        {% if hero_slides %}
+          {% for slide in hero_slides %}
+          <div class="slide">
+            <img src="{{ slide.image.url }}" alt="{{ slide.title }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" />
+            <div class="slide-overlay">
+              <span class="slide-caption">{{ slide.title }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          {% for post in latest_news|slice:":10" %}
+          {% if post.cover_image %}
+          <div class="slide">
+            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" />
+            <div class="slide-overlay">
+              <span class="slide-caption">{{ post.title|truncatechars:80 }}</span>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <!-- Fallback slides if no images -->
+        <div class="slide" style="background:linear-gradient(135deg,#0369A1,#0EA5E9);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+          <div style="font-size:72px;">📰</div>
+          <div style="color:#fff;font-size:18px;font-weight:700;font-family:Georgia,serif;text-align:center;padding:0 20px;">NUJ Uttar Pradesh</div>
+          <div style="color:#E0F2FE;font-size:13px;text-align:center;padding:0 30px;">Defending Press Freedom since 1964</div>
+        </div>
+
+      </div>
+
+      <!-- Nav arrows -->
+      <button class="slide-prev" id="slidePrev" onclick="slideNav(-1)" aria-label="Previous">‹</button>
+      <button class="slide-next" id="slideNext" onclick="slideNav(1)" aria-label="Next">›</button>
+
+      <!-- Dots -->
+      <div class="slide-dots" id="slideDots"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ STATS BAR ══ -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-icon">🏙️</div>
+      <div class="stat-number">75</div>
+      <div class="stat-label">City Units</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">🪪</div>
+      <div class="stat-number">3,500+</div>
+      <div class="stat-label">Members</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">📅</div>
+      <div class="stat-number">60+</div>
+      <div class="stat-label">Years of Service</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">🌐</div>
+      <div class="stat-number">IFJ</div>
+      <div class="stat-label">Affiliated Member</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NATIONAL OFFICE BEARERS ══ -->
+<div style="background:#fff;border-top:3px solid #0284C7;">
+  <div class="container-main" style="padding-top:48px;padding-bottom:48px;">
+
+    <!-- Section Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="width:28px;height:3px;background:#0284C7;border-radius:2px;"></div>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#0284C7;" class="bilingual-heading" data-hi="नेतृत्व">Leadership</span>
+        </div>
+        <h2 style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#0C4A6E;margin:0;" class="bilingual-heading" data-hi="राष्ट्रीय कार्यालय धारक">National Office Bearers</h2>
+        <p style="font-size:13px;color:#64748b;margin:4px 0 0;">National Union of Journalists (India)</p>
+      </div>
+      <a href="/office-bearers/national/" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#0284C7;color:#fff;font-size:13px;font-weight:700;border-radius:6px;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='#0369A1'" onmouseout="this.style.background='#0284C7'">
+        Full Directory
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+    </div>
+
+    {% if national_bearers %}
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:20px;" class="bearers-grid">
+      {% for bearer in national_bearers|slice:":6" %}
+      <a href="/office-bearers/{{ bearer.slug }}/" style="text-decoration:none;display:block;text-align:center;background:#fff;border:1px solid #BAE6FD;border-radius:12px;padding:20px 14px;transition:all .2s;box-shadow:0 1px 4px rgba(2,132,199,.06);" onmouseover="this.style.boxShadow='0 8px 24px rgba(2,132,199,.18)';this.style.borderColor='#0284C7';this.style.transform='translateY(-4px)'" onmouseout="this.style.boxShadow='0 1px 4px rgba(2,132,199,.06)';this.style.borderColor='#BAE6FD';this.style.transform='translateY(0)'">
+        {% if bearer.photo %}
+        <img src="{{ bearer.photo.url }}" alt="{{ bearer.name }}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin:0 auto 14px;display:block;border:4px solid #EFF6FF;box-shadow:0 4px 12px rgba(2,132,199,.15);" loading="lazy" />
+        {% else %}
+        <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#0369A1,#0EA5E9);color:#fff;font-family:Georgia,serif;font-size:36px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:4px solid #EFF6FF;box-shadow:0 4px 12px rgba(2,132,199,.15);">{{ bearer.name|slice:":1" }}</div>
+        {% endif %}
+        <div style="font-size:14px;font-weight:700;color:#0C4A6E;line-height:1.3;margin-bottom:6px;">{{ bearer.name }}</div>
+        <div style="display:inline-block;font-size:10.5px;font-weight:600;color:#0369A1;background:#EFF6FF;border:1px solid #BAE6FD;padding:3px 10px;border-radius:20px;line-height:1.4;">{{ bearer.role }}</div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ══ OFFICE BEARERS ══ -->
+<div style="background:#fff;border-top:3px solid #0284C7;">
+  <div class="container-main" style="padding-top:48px;padding-bottom:48px;">
+
+    <!-- Section Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="width:28px;height:3px;background:#0284C7;border-radius:2px;"></div>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#0284C7;" class="bilingual-heading" data-hi="नेतृत्व">Leadership</span>
+        </div>
+        <h2 style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#0C4A6E;margin:0;" class="bilingual-heading" data-hi="यूपी कार्यालय धारक">UP Office Bearers</h2>
+        <p style="font-size:13px;color:#64748b;margin:4px 0 0;">National Union of Journalists (I) Uttar Pradesh</p>
+      </div>
+      <a href="/office-bearers/" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#0284C7;color:#fff;font-size:13px;font-weight:700;border-radius:6px;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='#0369A1'" onmouseout="this.style.background='#0284C7'">
+        Full Directory
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+    </div>
+
+    {% if featured_bearers %}
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:20px;" class="bearers-grid">
+      {% for bearer in featured_bearers|slice:":6" %}
+      <a href="/office-bearers/{{ bearer.slug }}/" style="text-decoration:none;display:block;text-align:center;background:#fff;border:1px solid #BAE6FD;border-radius:12px;padding:20px 14px;transition:all .2s;box-shadow:0 1px 4px rgba(2,132,199,.06);" onmouseover="this.style.boxShadow='0 8px 24px rgba(2,132,199,.18)';this.style.borderColor='#0284C7';this.style.transform='translateY(-4px)'" onmouseout="this.style.boxShadow='0 1px 4px rgba(2,132,199,.06)';this.style.borderColor='#BAE6FD';this.style.transform='translateY(0)'">
+        {% if bearer.photo %}
+        <img src="{{ bearer.photo.url }}" alt="{{ bearer.name }}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin:0 auto 14px;display:block;border:4px solid #EFF6FF;box-shadow:0 4px 12px rgba(2,132,199,.15);" loading="lazy" />
+        {% else %}
+        <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#0369A1,#0EA5E9);color:#fff;font-family:Georgia,serif;font-size:36px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:4px solid #EFF6FF;box-shadow:0 4px 12px rgba(2,132,199,.15);">{{ bearer.name|slice:":1" }}</div>
+        {% endif %}
+        <div style="font-size:14px;font-weight:700;color:#0C4A6E;line-height:1.3;margin-bottom:6px;">{{ bearer.name }}</div>
+        <div style="display:inline-block;font-size:10.5px;font-weight:600;color:#0369A1;background:#EFF6FF;border:1px solid #BAE6FD;padding:3px 10px;border-radius:20px;line-height:1.4;">{{ bearer.role }}</div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ══ NEWS + PRESS RELEASES ══ -->
+<div class="light-section">
+  <div class="container-main" style="padding-top:48px;padding-bottom:48px;">
+    <div style="display:grid;grid-template-columns:3fr 2fr;gap:40px;">
+
+      <!-- News Column -->
+      <div>
+        <div class="section-header">
+          <div>
+            <div class="section-kicker"><div class="kicker-bar"></div><span class="kicker-text bilingual-heading" data-hi="नवीनतम">Latest</span></div>
+            <h2 class="section-title bilingual-heading" id="newsroom-heading" data-hi="समाचार अपडेट">News Updates</h2>
+          </div>
+          <a href="/newsroom/news/" class="section-link">View all →</a>
+        </div>
+
+        {% if latest_news %}
+        <div style="display:grid;gap:20px;">
+          {% with post=latest_news.0 %}
+          <article>
+            <a href="/newsroom/news/{{ post.slug }}/">
+              {% if post.cover_image %}
+              <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="news-featured-img" loading="eager" />
+              {% else %}
+              <div class="news-card-no-img" style="border-radius:10px;margin-bottom:0;">📰</div>
+              {% endif %}
+            </a>
+            {% if post.category %}
+            <span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:{{ post.category.color }};color:#fff;padding:3px 10px;border-radius:20px;margin:10px 0 6px;">{{ post.category.name }}</span>
+            {% endif %}
+            <h3 style="font-family:Georgia,serif;font-size:19px;font-weight:700;color:#0C4A6E;margin:8px 0;line-height:1.35;">
+              <a href="/newsroom/news/{{ post.slug }}/" style="text-decoration:none;color:inherit;transition:color .15s;" onmouseover="this.style.color='#c41e3a'" onmouseout="this.style.color='inherit'">{{ post.title }}</a>
+            </h3>
+            <p style="font-size:13.5px;color:#64748b;line-height:1.65;margin-bottom:8px;">{{ post.summary|truncatechars:180 }}</p>
+            <span style="font-size:11.5px;color:#94a3b8;font-weight:600;">{{ post.published_at|date:"d F Y" }}</span>
+          </article>
+          {% endwith %}
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          {% for post in latest_news|slice:"1:5" %}
+          <article class="news-card">
+            {% if post.cover_image %}
+            <a href="/newsroom/news/{{ post.slug }}/"><img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="width:100%;height:150px;object-fit:cover;display:block;" loading="lazy" /></a>
+            {% else %}
+            <div class="news-card-no-img" style="height:120px;font-size:28px;">📰</div>
+            {% endif %}
+            <div class="news-card-body">
+              <h3 style="font-size:13.5px;font-weight:700;color:#0C4A6E;line-height:1.4;margin-bottom:6px;">
+                <a href="/newsroom/news/{{ post.slug }}/" style="text-decoration:none;color:inherit;" onmouseover="this.style.color='#c41e3a'" onmouseout="this.style.color='inherit'">{{ post.title|truncatechars:65 }}</a>
+              </h3>
+              <span style="font-size:11px;color:#94a3b8;">{{ post.published_at|date:"d M Y" }}</span>
+            </div>
+          </article>
+          {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Press Releases + Docs Column -->
+      <div>
+        <div class="section-header">
+          <div>
+            <div class="section-kicker"><div class="kicker-bar" style="background:#0284C7;"></div><span class="kicker-text bilingual-heading" style="color:#0284C7;" data-hi="आधिकारिक">Official</span></div>
+            <h2 class="section-title bilingual-heading" data-hi="प्रेस विज्ञप्ति">Press Releases</h2>
+          </div>
+          <a href="/newsroom/press-releases/" class="section-link">View all →</a>
+        </div>
+
+        <div style="background:#fff;border:1px solid #BAE6FD;border-radius:10px;padding:20px;">
+          {% if latest_press %}
+          {% for release in latest_press %}
+          <div class="press-item">
+            <div class="press-date">{{ release.published_at|date:"d F Y" }}</div>
+            <a href="/newsroom/press-releases/{{ release.slug }}/" class="press-title">{{ release.title }}</a>
+            <div style="display:flex;gap:12px;margin-top:6px;">
+              <a href="/newsroom/press-releases/{{ release.slug }}/" style="font-size:11.5px;color:#0284C7;font-weight:600;text-decoration:none;">Read More</a>
+              {% if release.attachment %}<a href="/newsroom/press-releases/{{ release.slug }}/" style="font-size:11.5px;color:#c41e3a;font-weight:600;text-decoration:none;">📎 PDF</a>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONTACT STRIP ══ -->
+<div class="contact-strip">
+  <div class="contact-strip-inner">
+    <div>
+      <div class="contact-item-icon">📞</div>
+      <div class="contact-item-label">Call Us</div>
+      <a href="tel:+919415049966" class="contact-item-value" style="display:block;">+91 94150 49966</a>
+    </div>
+    <div>
+      <div class="contact-item-icon">✉️</div>
+      <div class="contact-item-label">Email Us</div>
+      <a href="mailto:nujlucknow@gmail.com" class="contact-item-value">nujlucknow@gmail.com</a>
+    </div>
+    <div>
+      <div class="contact-item-icon">🏢</div>
+      <div class="contact-item-label">Office</div>
+      <span class="contact-item-value" style="font-size:13px;color:#BAE6FD;">NUJ UP Secretariat<br/>Lucknow, Uttar Pradesh</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDESHOW SCRIPT ══ -->
+<script>
+(function() {
+  const track = document.getElementById('slideTrack');
+  const dotsWrap = document.getElementById('slideDots');
+  const counter = document.getElementById('slideCounter');
+  if (!track) return;
+
+  const slides = track.querySelectorAll('.slide');
+  const total = slides.length;
+  if (!total) return;
+
+  let cur = 0, timer = null;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i+1));
+    dot.onclick = () => goTo(i);
+    dotsWrap.appendChild(dot);
+  });
+
+  function goTo(n) {
+    cur = (n + total) % total;
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    dotsWrap.querySelectorAll('.slide-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+    counter.textContent = `${cur + 1} / ${total}`;
+    resetTimer();
+  }
+
+  window.slideNav = (dir) => goTo(cur + dir);
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(cur + 1), 4000);
+  }
+
+  const sw = document.getElementById('heroSlideshow');
+  if (sw) {
+    sw.addEventListener('mouseenter', () => clearInterval(timer));
+    sw.addEventListener('mouseleave', resetTimer);
+  }
+
+  goTo(0);
+})();
+</script>
+
+{% endblock %}

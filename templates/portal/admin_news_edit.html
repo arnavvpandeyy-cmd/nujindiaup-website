@@ -1,0 +1,138 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}{% if post %}Edit News Post{% else %}Add News Post{% endif %}{% endblock %}
+
+{% block content %}
+<a href="/portal/admin/news/" class="text-sm text-gray-400 hover:text-white mb-6 inline-block">← Back to News</a>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-1 space-y-5">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Cover Image</h3>
+        {% if post and post.cover_image %}
+        <img src="{{ post.cover_image.url }}" class="w-full h-28 object-cover rounded-xl mb-3" alt="" />
+        {% endif %}
+        <input type="file" name="cover_image" accept="image/*"
+          class="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-gray-700 file:text-white file:text-xs file:cursor-pointer hover:file:bg-gray-600" />
+        <p class="text-xs text-gray-500 mt-2">Recommended: 1200×630px</p>
+      </div>
+
+      <!-- Gallery Images -->
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold text-white text-sm">Gallery Images</h3>
+          <button type="button" onclick="addGalleryRow()" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">+ Add Photo</button>
+        </div>
+
+        <!-- Existing gallery images -->
+        {% if post %}
+        {% for img in post.extra_images.all %}
+        <div class="mb-3 p-3 bg-gray-800 rounded-xl">
+          <img src="{{ img.image.url }}" class="w-full h-20 object-cover rounded-lg mb-2" alt="" />
+          <input type="text" name="gallery_caption_{{ img.pk }}" value="{{ img.caption }}" placeholder="Caption..." class="w-full bg-gray-700 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none mb-1" />
+          <label class="flex items-center gap-1.5 text-xs text-red-400 cursor-pointer">
+            <input type="checkbox" name="gallery_delete_{{ img.pk }}" class="rounded" />
+            Delete this photo
+          </label>
+        </div>
+        {% empty %}
+        <p class="text-xs text-gray-500 mb-2">No gallery images yet.</p>
+        {% endfor %}
+        {% endif %}
+
+        <!-- New uploads -->
+        <div id="gallery-upload-rows"></div>
+        <p class="text-xs text-gray-500 mt-2">JPEG/PNG · max 10MB each</p>
+      </div>
+
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <h3 class="font-semibold text-white text-sm mb-4">Settings</h3>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Category</label>
+            <select name="category" class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none">
+              <option value="">— Uncategorised —</option>
+              {% for cat in categories %}
+              <option value="{{ cat.pk }}" {% if post and post.category_id == cat.pk %}selected{% endif %}>{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Author</label>
+            <input type="text" name="author" value="{{ post.author|default:user.get_full_name }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Publish Date & Time</label>
+            <input type="datetime-local" name="published_at"
+              value="{{ post.published_at|date:'Y-m-d\TH:i'|default:'' }}"
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" name="is_published" id="is_pub" {% if not post or post.is_published %}checked{% endif %} class="rounded" />
+            <label for="is_pub" class="text-sm text-gray-300">Published</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" name="is_featured" id="is_feat" {% if post and post.is_featured %}checked{% endif %} class="rounded" />
+            <label for="is_feat" class="text-sm text-gray-300">Featured (homepage)</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-5">
+      <div class="bg-gray-900 border border-white/5 rounded-2xl p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Headline *</label>
+            <input type="text" name="title" value="{{ post.title|default:'' }}" required placeholder="News headline..."
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none text-base font-medium" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Summary / Intro</label>
+            <textarea name="summary" rows="2" placeholder="Brief summary shown in listings..."
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none resize-none">{{ post.summary|default:'' }}</textarea>
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Full Article *</label>
+            <textarea name="body" rows="16" required placeholder="Full news article content...&#10;&#10;Use blank lines to separate paragraphs."
+              class="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:ring-1 focus:ring-union-red outline-none resize-y leading-relaxed font-mono">{{ post.body|default:'' }}</textarea>
+            <p class="text-xs text-gray-500 mt-1">You can use basic HTML tags like &lt;p&gt;, &lt;b&gt;, &lt;a&gt;, &lt;br&gt;</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="px-6 py-3 bg-union-red hover:bg-red-700 text-white font-semibold text-sm rounded-xl transition-colors">
+          {% if post %}Update Post{% else %}Publish News{% endif %}
+        </button>
+        <a href="/portal/admin/news/" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium text-sm rounded-xl transition-colors">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% block extra_js %}
+<script>
+let galleryCount = 0;
+function addGalleryRow() {
+  const wrap = document.getElementById('gallery-upload-rows');
+  const div = document.createElement('div');
+  div.className = 'mb-3 p-3 bg-gray-800 rounded-xl';
+  div.innerHTML = `
+    <input type="file" name="gallery_image_new_${galleryCount}" accept="image/*"
+      class="w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-700 file:text-white file:text-xs mb-1" />
+    <input type="text" name="gallery_caption_new_${galleryCount}" placeholder="Caption (optional)..."
+      class="w-full bg-gray-700 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none mb-1" />
+    <button type="button" onclick="this.closest('div').remove()" class="text-xs text-red-400 hover:text-red-300">Remove</button>
+  `;
+  wrap.appendChild(div);
+  galleryCount++;
+}
+</script>
+{% endblock %}
+{% endblock %}

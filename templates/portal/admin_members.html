@@ -1,0 +1,66 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Members{% endblock %}
+
+{% block content %}
+<!-- Search & Filter -->
+<form method="get" class="flex flex-wrap gap-3 mb-6">
+  <input type="text" name="q" value="{{ q }}" placeholder="Search name, email, member ID..."
+    class="flex-1 min-w-48 bg-gray-900 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:ring-1 focus:ring-union-red outline-none" />
+  <select name="city" class="bg-gray-900 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-gray-300 focus:ring-1 focus:ring-union-red outline-none">
+    <option value="">All Cities</option>
+    {% for code, name in cities %}
+    <option value="{{ code }}" {% if city_filter == code %}selected{% endif %}>{{ name }}</option>
+    {% endfor %}
+  </select>
+  <select name="role" class="bg-gray-900 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-gray-300 focus:ring-1 focus:ring-union-red outline-none">
+    <option value="">All Roles</option>
+    {% for value, label in roles %}
+    <option value="{{ value }}" {% if role_filter == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="px-4 py-2.5 bg-union-red hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">Filter</button>
+  {% if q or city_filter or role_filter %}
+  <a href="/portal/admin/members/" class="px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-colors">Clear</a>
+  {% endif %}
+</form>
+
+<div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+  <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+    <h2 class="font-semibold text-white text-sm">{{ profiles.count }} Member{{ profiles.count|pluralize }}</h2>
+  </div>
+  {% if profiles %}
+  <div class="divide-y divide-white/5">
+    {% for profile in profiles %}
+    <div class="px-5 py-3.5 flex items-center gap-4 hover:bg-white/2 transition-colors">
+      {% if profile.photo %}
+      <img src="{{ profile.photo.url }}" class="w-10 h-10 rounded-full object-cover flex-shrink-0" alt="" />
+      {% else %}
+      <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-300 flex-shrink-0">{{ profile.get_full_name|first|upper }}</div>
+      {% endif %}
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-sm font-medium text-white">{{ profile.get_full_name }}</span>
+          <span class="text-xs font-mono text-gray-500">{{ profile.member_id }}</span>
+          <span class="text-xs px-2 py-0.5 rounded-full
+            {% if profile.role == 'super_admin' %}bg-red-900/60 text-red-300
+            {% elif profile.role == 'city_admin' %}bg-amber-900/60 text-amber-300
+            {% else %}bg-gray-700 text-gray-400{% endif %}">
+            {{ profile.get_role_display }}
+          </span>
+          {% if not profile.is_active_member %}<span class="text-xs px-2 py-0.5 rounded-full bg-red-900/40 text-red-400">Inactive</span>{% endif %}
+        </div>
+        <div class="text-xs text-gray-500 truncate mt-0.5">
+          {{ profile.designation|default:"—" }} · {{ profile.organization|default:"—" }} · {{ profile.get_city_display|default:profile.city }}
+        </div>
+      </div>
+      <div class="text-xs text-gray-500 flex-shrink-0 hidden md:block">{{ profile.user.email }}</div>
+      <a href="/portal/admin/members/{{ profile.pk }}/edit/" class="flex-shrink-0 text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Edit</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="py-16 text-center text-gray-500">No members found.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

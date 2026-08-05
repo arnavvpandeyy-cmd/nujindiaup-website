@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: false, mobileOpen: false, activeTab: 'home' }" :class="{ 'dark': darkMode }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NUJ India — National Union of Journalists (India)</title>
+  <meta name="description" content="Official website of the National Union of Journalists (India) — Defending Press Freedom and Journalists' Rights." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f0f3f9', 100: '#d9e1f0', 200: '#b3c3e1',
+              300: '#7d98c8', 400: '#4e6ead', 500: '#2f508f',
+              600: '#1a2744', 700: '#152038', 800: '#10192c', 900: '#0a1020',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+    .brand-red { color: #b91c1c; }
+    .bg-brand-red { background-color: #b91c1c; }
+    .border-brand-red { border-color: #b91c1c; }
+    .hover\:bg-red-700:hover { background-color: #b91c1c; }
+    .line-clamp-2 { display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+    .line-clamp-3 { display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden; }
+    .nav-secondary-bar { width: 100%; background: #FEF08A !important; border-top: 1px solid #FACC15 !important; border-bottom: 3px solid #EAB308 !important; }
+    .nav-secondary-bar .nav-links { display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 10px !important; }
+    .nav-secondary-bar .nav-link, .nav-btn { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; background: #FCE7F3 !important; padding: 10px 18px !important; font-size: 14px !important; font-weight: 700 !important; color: #831843 !important; border-radius: 12px !important; border: 1px solid #F9A8D4 !important; text-decoration: none !important; white-space: nowrap !important; }
+    .nav-secondary-bar .nav-link:hover, .nav-btn:hover { background: #F9A8D4 !important; border-color: #F472B6 !important; }
+  </style>
+</head>
+
+<body class="bg-stone-50 text-neutral-900 dark:bg-navy-900 dark:text-stone-100 antialiased min-h-screen flex flex-col">
+
+<!-- ═══════════════════════════════════════════
+     ANNOUNCEMENT BANNER
+═══════════════════════════════════════════ -->
+<div class="bg-navy-600 dark:bg-navy-800 text-white py-2 px-4 text-center text-sm font-medium">
+  <span>🔔 Membership Drive 2024 — Applications Open</span>
+  <a href="#membership" onclick="document.getElementById('nav-membership').click()" class="ml-2 underline hover:text-amber-300 transition-colors cursor-pointer">Apply Now →</a>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════ -->
+<header class="bg-white dark:bg-navy-800 border-b border-stone-200 dark:border-navy-700 sticky top-0 z-40 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-3 flex-shrink-0 cursor-pointer" onclick="showPage('home')">
+        <div class="w-10 h-10 bg-navy-600 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-white font-serif font-bold text-sm">NUJ</span>
+        </div>
+        <div class="flex flex-col leading-tight">
+          <span class="font-serif text-lg lg:text-xl font-bold text-navy-600 dark:text-white">NUJ India</span>
+          <span class="text-xs text-neutral-500 dark:text-neutral-400 tracking-wide uppercase hidden lg:block">National Union of Journalists</span>
+        </div>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1">
+        <button onclick="showPage('home')" id="nav-home" class="nav-btn px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">Home</button>
+        <div class="relative group" x-data="{ open: false }" @mouseenter="open=true" @mouseleave="open=false">
+          <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">
+            About
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="open" x-transition class="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-navy-800 rounded-lg shadow-xl border border-stone-100 dark:border-navy-600 py-1 z-50">
+            <a href="#" class="block px-4 py-2.5 text-sm text-neutral-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-navy-700">Who We Are</a>
+            <a href="#" class="block px-4 py-2.5 text-sm text-neutral-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-navy-700">History</a>
+            <a href="#" class="block px-4 py-2.5 text-sm text-neutral-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-navy-700">Constitution</a>
+            <a href="#" class="block px-4 py-2.5 text-sm text-neutral-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-navy-700">Affiliations</a>
+          </div>
+        </div>
+        <button onclick="showPage('bearers')" id="nav-bearers" class="nav-btn px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">Office Bearers</button>
+        <button onclick="showPage('states')" id="nav-states" class="nav-btn px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">State Units</button>
+        <div class="relative" x-data="{ open: false }" @mouseenter="open=true" @mouseleave="open=false">
+          <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">
+            Newsroom <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="open" x-transition class="absolute top-full left-0 mt-1 w-52 bg-white dark:bg-navy-800 rounded-lg shadow-xl border border-stone-100 dark:border-navy-600 py-1 z-50">
+            <button onclick="showPage('newsroom');document.querySelector('[x-data]').open=false" class="block w-full text-left px-4 py-2.5 text-sm text-neutral-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-navy-700">News Updates</button>
+            <a href="#" class="block px-4 py-2.5 text-sm text-neutral-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-navy-700">Press Releases</a>
+            <a href="#" class="block px-4 py-2.5 text-sm text-neutral-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-navy-700">Letters & Statements</a>
+          </div>
+        </div>
+        <button onclick="showPage('documents')" id="nav-documents" class="nav-btn px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">Documents</button>
+        <button onclick="showPage('membership')" id="nav-membership" class="nav-btn px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">Membership</button>
+        <button onclick="showPage('contact')" id="nav-contact" class="nav-btn px-3 py-2 text-sm font-medium text-neutral-700 dark:text-stone-200 hover:text-navy-600 rounded-md transition-colors">Contact</button>
+      </nav>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-2">
+        <button onclick="showPage('search')" class="p-2 rounded-md text-neutral-500 hover:text-navy-600 dark:text-stone-400 transition-colors" aria-label="Search">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </button>
+        <button @click="darkMode = !darkMode" class="p-2 rounded-md text-neutral-500 hover:text-navy-600 dark:text-stone-400 transition-colors">
+          <svg x-show="!darkMode" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg x-show="darkMode" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </button>
+        <button onclick="showPage('membership')" class="hidden lg:inline-flex items-center px-4 py-2 bg-red-700 text-white text-sm font-semibold rounded-md hover:bg-red-800 transition-colors">Join NUJ</button>
+        <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2 rounded-md text-neutral-600 dark:text-stone-300">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile Nav -->
+  <div x-show="mobileOpen" x-transition class="lg:hidden border-t border-stone-200 dark:border-navy-700 bg-white dark:bg-navy-800 px-4 py-4 space-y-1">
+    <button onclick="showPage('home');mobileOpen=false" class="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-stone-200 rounded-md hover:bg-stone-50">Home</button>
+    <button onclick="showPage('bearers');mobileOpen=false" class="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-stone-200 rounded-md hover:bg-stone-50">Office Bearers</button>
+    <button onclick="showPage('newsroom');mobileOpen=false" class="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-stone-200 rounded-md hover:bg-stone-50">Newsroom</button>
+    <button onclick="showPage('membership');mobileOpen=false" class="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-stone-200 rounded-md hover:bg-stone-50">Membership</button>
+    <button onclick="showPage('contact');mobileOpen=false" class="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-700 dark:text-stone-200 rounded-md hover:bg-stone-50">Contact</button>
+    <button onclick="showPage('membership');mobileOpen=false" class="block w-full text-center px-4 py-2.5 bg-red-700 text-white text-sm font-semibold rounded-md mt-2">Apply for Membership</button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     PAGES
+═══════════════════════════════════════════ -->
+<main class="flex-1">
+
+<!-- ──── HOME PAGE ──── -->
+<div id="page-home">
+
+  <!-- Hero -->
+  <section class="relative bg-navy-600 dark:bg-navy-900 text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 0, transparent 50%); background-size: 20px 20px;"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+      <div class="max-w-3xl">
+        <div class="flex items-center gap-2 mb-5">
+          <span class="w-8 h-0.5 bg-red-500"></span>
+          <span class="text-sm font-medium uppercase tracking-widest text-stone-300">Official Website</span>
+        </div>
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-white mb-6">
+          National Union of Journalists<br/>
+          <span class="text-amber-400">(India)</span>
+        </h1>
+        <p class="text-lg lg:text-xl text-stone-300 leading-relaxed max-w-2xl mb-10">
+          Defending press freedom, protecting journalists' rights, and upholding democracy across India for over six decades.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button onclick="showPage('membership')" class="inline-flex items-center justify-center px-6 py-3.5 bg-red-700 text-white font-semibold rounded-md hover:bg-red-800 transition-colors text-base">
+            Apply for Membership
+            <svg class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </button>
+          <button class="inline-flex items-center justify-center px-6 py-3.5 border border-stone-400 text-stone-200 font-semibold rounded-md hover:bg-white/10 transition-colors text-base">
+            About NUJ India
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="bg-white dark:bg-navy-800 border-b border-stone-200 dark:border-navy-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div><div class="font-serif text-3xl lg:text-4xl font-bold text-navy-600 dark:text-white">36</div><div class="text-sm text-neutral-500 dark:text-stone-400 mt-1 font-medium uppercase tracking-wide">State Units</div></div>
+        <div><div class="font-serif text-3xl lg:text-4xl font-bold text-navy-600 dark:text-white">5,000+</div><div class="text-sm text-neutral-500 dark:text-stone-400 mt-1 font-medium uppercase tracking-wide">Members</div></div>
+        <div><div class="font-serif text-3xl lg:text-4xl font-bold text-navy-600 dark:text-white">60+</div><div class="text-sm text-neutral-500 dark:text-stone-400 mt-1 font-medium uppercase tracking-wide">Years of Service</div></div>
+        <div><div class="font-serif text-3xl lg:text-4xl font-bold text-navy-600 dark:text-white">IFJ</div><div class="text-sm text-neutral-500 dark:text-stone-400 mt-1 font-medium uppercase tracking-wide">Affiliated Member</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News + Press Releases -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="lg:grid lg:grid-cols-5 lg:gap-12">
+
+      <!-- News Column -->
+      <div class="lg:col-span-3 mb-12 lg:mb-0">
+        <div class="flex items-center justify-between mb-7">
+          <div>
+            <div class="flex items-center gap-2 mb-1"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Latest</span></div>
+            <h2 class="font-serif text-2xl font-bold text-neutral-900 dark:text-white">News Updates</h2>
+          </div>
+          <button onclick="showPage('newsroom')" class="text-sm font-medium text-navy-600 dark:text-stone-300 hover:text-red-600 transition-colors">View all →</button>
+        </div>
+        <!-- Featured post -->
+        <article class="group mb-6">
+          <div class="w-full h-52 bg-gradient-to-br from-navy-100 to-navy-200 dark:from-navy-700 dark:to-navy-800 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+            <div class="text-center text-navy-400 dark:text-navy-500">
+              <svg class="w-16 h-16 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+              <span class="text-sm font-medium">Feature Image</span>
+            </div>
+          </div>
+          <span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full text-white mb-2 bg-red-700">Press Freedom</span>
+          <h3 class="font-serif text-xl font-bold text-neutral-900 dark:text-white leading-snug mb-2">
+            <a href="#" class="hover:text-red-700 transition-colors">NUJ India condemns arrest of journalist in Manipur, demands immediate release</a>
+          </h3>
+          <p class="text-sm text-neutral-600 dark:text-stone-400 leading-relaxed line-clamp-2">The National Union of Journalists (India) strongly condemns the arbitrary arrest of senior journalist Rahul Kumar in Manipur and calls upon the state government to ensure his immediate and unconditional release.</p>
+          <div class="text-xs text-neutral-400 dark:text-stone-500 mt-2">14 July 2024</div>
+        </article>
+        <!-- Compact list -->
+        <div class="space-y-5">
+          <article class="group flex gap-4 pt-5 border-t border-stone-100 dark:border-navy-700">
+            <div class="w-20 h-16 bg-gradient-to-br from-stone-100 to-stone-200 dark:from-navy-700 dark:to-navy-800 rounded-md flex-shrink-0 flex items-center justify-center">
+              <svg class="w-8 h-8 text-stone-300 dark:text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <span class="text-xs font-semibold brand-red uppercase tracking-wide">Union Affairs</span>
+              <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug mt-0.5 line-clamp-2">
+                <a href="#" class="hover:text-red-700 transition-colors">NUJ India calls for implementation of Majithia Wage Board recommendations across all media houses</a>
+              </h3>
+              <div class="text-xs text-neutral-400 dark:text-stone-500 mt-1">10 July 2024</div>
+            </div>
+          </article>
+          <article class="group flex gap-4 pt-5 border-t border-stone-100 dark:border-navy-700">
+            <div class="w-20 h-16 bg-gradient-to-br from-stone-100 to-stone-200 dark:from-navy-700 dark:to-navy-800 rounded-md flex-shrink-0 flex items-center justify-center">
+              <svg class="w-8 h-8 text-stone-300 dark:text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <span class="text-xs font-semibold brand-red uppercase tracking-wide">Media Industry</span>
+              <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug mt-0.5 line-clamp-2">
+                <a href="#" class="hover:text-red-700 transition-colors">Annual General Meeting of NUJ India to be held in New Delhi on August 15</a>
+              </h3>
+              <div class="text-xs text-neutral-400 dark:text-stone-500 mt-1">5 July 2024</div>
+            </div>
+          </article>
+          <article class="group flex gap-4 pt-5 border-t border-stone-100 dark:border-navy-700">
+            <div class="w-20 h-16 bg-gradient-to-br from-stone-100 to-stone-200 dark:from-navy-700 dark:to-navy-800 rounded-md flex-shrink-0 flex items-center justify-center">
+              <svg class="w-8 h-8 text-stone-300 dark:text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <span class="text-xs font-semibold brand-red uppercase tracking-wide">Press Freedom</span>
+              <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug mt-0.5 line-clamp-2">
+                <a href="#" class="hover:text-red-700 transition-colors">NUJ India joins IFJ in marking World Press Freedom Day with a national seminar in Mumbai</a>
+              </h3>
+              <div class="text-xs text-neutral-400 dark:text-stone-500 mt-1">3 May 2024</div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Press Releases Column -->
+      <div class="lg:col-span-2">
+        <div class="flex items-center justify-between mb-7">
+          <div>
+            <div class="flex items-center gap-2 mb-1"><span class="w-5 h-0.5 bg-navy-600"></span><span class="text-xs font-semibold uppercase tracking-widest text-navy-600 dark:text-stone-400">Official</span></div>
+            <h2 class="font-serif text-2xl font-bold text-neutral-900 dark:text-white">Press Releases</h2>
+          </div>
+          <a href="#" class="text-sm font-medium text-navy-600 dark:text-stone-300 hover:text-red-600 transition-colors">View all →</a>
+        </div>
+        <div class="divide-y divide-stone-100 dark:divide-navy-700">
+          <article class="py-4">
+            <div class="text-xs text-neutral-400 dark:text-stone-500 mb-1">12 July 2024</div>
+            <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug mb-2 hover:text-red-700 transition-colors cursor-pointer">NUJ India strongly protests the suspension of journalist accreditation in Assam</h3>
+            <a href="#" class="text-xs text-navy-600 dark:text-stone-400 font-medium hover:underline">Read More</a>
+          </article>
+          <article class="py-4">
+            <div class="text-xs text-neutral-400 dark:text-stone-500 mb-1">8 July 2024</div>
+            <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug mb-2 hover:text-red-700 transition-colors cursor-pointer">Statement on the murder of journalist in Bihar — NUJ India demands CBI inquiry</h3>
+            <div class="flex gap-3 text-xs">
+              <a href="#" class="text-navy-600 dark:text-stone-400 font-medium hover:underline">Read More</a>
+              <a href="#" class="flex items-center gap-1 brand-red font-medium hover:underline">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Download PDF
+              </a>
+            </div>
+          </article>
+          <article class="py-4">
+            <div class="text-xs text-neutral-400 dark:text-stone-500 mb-1">2 July 2024</div>
+            <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug mb-2 hover:text-red-700 transition-colors cursor-pointer">NUJ India demands inclusion of journalists in ESIC healthcare scheme</h3>
+            <a href="#" class="text-xs text-navy-600 dark:text-stone-400 font-medium hover:underline">Read More</a>
+          </article>
+          <article class="py-4">
+            <div class="text-xs text-neutral-400 dark:text-stone-500 mb-1">20 June 2024</div>
+            <h3 class="font-medium text-neutral-900 dark:text-white text-sm leading-snug mb-2 hover:text-red-700 transition-colors cursor-pointer">Letter to Ministry of I&B regarding journalist safety guidelines during elections</h3>
+            <div class="flex gap-3 text-xs">
+              <a href="#" class="text-navy-600 dark:text-stone-400 font-medium hover:underline">Read More</a>
+              <a href="#" class="flex items-center gap-1 brand-red font-medium hover:underline"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>PDF</a>
+            </div>
+          </article>
+        </div>
+
+        <!-- Important Documents -->
+        <div class="mt-8 bg-stone-50 dark:bg-navy-800 rounded-xl border border-stone-200 dark:border-navy-600 p-5">
+          <h3 class="font-serif text-lg font-bold text-neutral-900 dark:text-white mb-4">Important Documents</h3>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 mt-0.5 brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              <div><a href="#" class="text-sm font-medium text-neutral-800 dark:text-stone-200 hover:text-red-700 transition-colors">NUJ India Constitution 2022</a><div class="text-xs text-neutral-400">Policy Documents • 2022</div></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 mt-0.5 brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              <div><a href="#" class="text-sm font-medium text-neutral-800 dark:text-stone-200 hover:text-red-700 transition-colors">Annual Report 2023–24</a><div class="text-xs text-neutral-400">Reports • 2024</div></div>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 mt-0.5 brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              <div><a href="#" class="text-sm font-medium text-neutral-800 dark:text-stone-200 hover:text-red-700 transition-colors">Membership Guidelines 2024</a><div class="text-xs text-neutral-400">Circulars • 2024</div></div>
+            </li>
+          </ul>
+          <button onclick="showPage('documents')" class="mt-4 text-sm font-medium text-navy-600 dark:text-stone-300 hover:text-red-700 inline-block">All Documents →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leadership Message -->
+  <section class="bg-stone-100 dark:bg-navy-800 border-y border-stone-200 dark:border-navy-700 py-14">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-start md:items-center gap-8">
+        <div class="w-24 h-24 rounded-full bg-navy-200 dark:bg-navy-700 flex-shrink-0 flex items-center justify-center ring-4 ring-white dark:ring-navy-600 shadow-md text-navy-600 dark:text-stone-300 font-serif text-3xl font-bold">R</div>
+        <div>
+          <svg class="w-8 h-8 brand-red mb-3 opacity-60" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <blockquote class="font-serif text-lg lg:text-xl text-neutral-800 dark:text-stone-200 italic leading-relaxed">
+            "A free press is the guardian of democracy. NUJ India will continue to stand firmly behind every journalist fighting for truth, dignity and the right to report without fear."
+          </blockquote>
+          <div class="mt-4">
+            <div class="font-semibold text-neutral-900 dark:text-white">Ravi Shankar</div>
+            <div class="text-sm text-neutral-500 dark:text-stone-400">President, National Union of Journalists (India)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Access -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <h2 class="font-serif text-2xl font-bold text-neutral-900 dark:text-white mb-8 text-center">Quick Access</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <button onclick="showPage('bearers')" class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">Office Bearers</span>
+      </button>
+      <button onclick="showPage('states')" class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">State Units</span>
+      </button>
+      <button onclick="showPage('membership')" class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">Membership</span>
+      </button>
+      <button onclick="showPage('newsroom')" class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">Press Releases</span>
+      </button>
+      <button onclick="showPage('documents')" class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">Documents</span>
+      </button>
+      <button onclick="showPage('contact')" class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">Contact Us</span>
+      </button>
+      <button class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">Events</span>
+      </button>
+      <button onclick="showPage('membership')" class="group flex flex-col items-center text-center p-5 bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-navy-50 dark:bg-navy-700 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+          <svg class="w-5 h-5 text-navy-600 dark:text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        </div>
+        <span class="text-sm font-medium text-neutral-800 dark:text-stone-200 group-hover:text-red-700 transition-colors">Check Status</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Office Bearers Snapshot -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Leadership</span></div>
+        <h2 class="font-serif text-2xl font-bold text-neutral-900 dark:text-white">National Office Bearers</h2>
+      </div>
+      <button onclick="showPage('bearers')" class="text-sm font-medium text-navy-600 dark:text-stone-300 hover:text-red-600 transition-colors">Full Directory →</button>
+    </div>
+    <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-5">
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-2 flex items-center justify-center font-serif text-xl font-bold text-navy-600 dark:text-stone-300 ring-2 ring-stone-200 dark:ring-navy-600">R</div>
+        <div class="text-sm font-semibold text-neutral-900 dark:text-white leading-tight">Ravi Shankar</div>
+        <div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">President</div>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-2 flex items-center justify-center font-serif text-xl font-bold text-navy-600 dark:text-stone-300 ring-2 ring-stone-200 dark:ring-navy-600">P</div>
+        <div class="text-sm font-semibold text-neutral-900 dark:text-white leading-tight">Priya Nair</div>
+        <div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">Secretary General</div>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-2 flex items-center justify-center font-serif text-xl font-bold text-navy-600 dark:text-stone-300 ring-2 ring-stone-200 dark:ring-navy-600">A</div>
+        <div class="text-sm font-semibold text-neutral-900 dark:text-white leading-tight">Amit Verma</div>
+        <div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">Treasurer</div>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-2 flex items-center justify-center font-serif text-xl font-bold text-navy-600 dark:text-stone-300 ring-2 ring-stone-200 dark:ring-navy-600">S</div>
+        <div class="text-sm font-semibold text-neutral-900 dark:text-white leading-tight">Sunita Rao</div>
+        <div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">Joint Secretary</div>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-2 flex items-center justify-center font-serif text-xl font-bold text-navy-600 dark:text-stone-300 ring-2 ring-stone-200 dark:ring-navy-600">M</div>
+        <div class="text-sm font-semibold text-neutral-900 dark:text-white leading-tight">Mohan Das</div>
+        <div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">VP — South</div>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-2 flex items-center justify-center font-serif text-xl font-bold text-navy-600 dark:text-stone-300 ring-2 ring-stone-200 dark:ring-navy-600">K</div>
+        <div class="text-sm font-semibold text-neutral-900 dark:text-white leading-tight">Kavita Singh</div>
+        <div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">VP — North</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ──── MEMBERSHIP PAGE ──── -->
+<div id="page-membership" class="hidden">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Join</span></div>
+      <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white">Apply for Membership</h1>
+      <p class="text-neutral-600 dark:text-stone-400 mt-2">Fill in the form below to apply for NUJ India membership. Your reference number will be emailed to you.</p>
+    </div>
+    <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-8 flex gap-3">
+      <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <p class="text-sm text-amber-800 dark:text-amber-300">After submission, save your <strong>Reference Number</strong> to track your application status.</p>
+    </div>
+    <div class="space-y-6">
+      <!-- Section 1 -->
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 lg:p-8">
+        <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
+          <span class="w-7 h-7 bg-navy-600 text-white rounded-full text-sm font-bold flex items-center justify-center">1</span> Personal Details
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Full Name <span class="brand-red">*</span></label><input type="text" placeholder="Enter your full name" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Email Address <span class="brand-red">*</span></label><input type="email" placeholder="your@email.com" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Phone Number <span class="brand-red">*</span></label><input type="tel" placeholder="+91 XXXXX XXXXX" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Date of Birth <span class="brand-red">*</span></label><input type="date" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">State <span class="brand-red">*</span></label>
+            <select class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-700 dark:text-stone-200 focus:ring-2 focus:ring-navy-500 outline-none">
+              <option>— Select State —</option><option>Delhi</option><option>Maharashtra</option><option>Karnataka</option><option>Tamil Nadu</option><option>West Bengal</option><option>Uttar Pradesh</option><option>Gujarat</option>
+            </select>
+          </div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">PIN Code</label><input type="text" placeholder="110001" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div class="sm:col-span-2"><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Residential Address <span class="brand-red">*</span></label><textarea rows="3" placeholder="Your residential address" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none resize-none"></textarea></div>
+        </div>
+      </div>
+      <!-- Section 2 -->
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 lg:p-8">
+        <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
+          <span class="w-7 h-7 bg-navy-600 text-white rounded-full text-sm font-bold flex items-center justify-center">2</span> Professional Details
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Current Designation <span class="brand-red">*</span></label><input type="text" placeholder="e.g., Senior Reporter" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Organization / Publication <span class="brand-red">*</span></label><input type="text" placeholder="e.g., The Hindu, PTI" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Years of Experience</label><input type="number" min="0" placeholder="10" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Membership Type</label>
+            <select class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-700 dark:text-stone-200 focus:ring-2 focus:ring-navy-500 outline-none">
+              <option>Ordinary Member</option><option>Associate Member</option><option>Honorary Member</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Section 3 -->
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 lg:p-8">
+        <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-2 flex items-center gap-2">
+          <span class="w-7 h-7 bg-navy-600 text-white rounded-full text-sm font-bold flex items-center justify-center">3</span> Supporting Documents
+        </h2>
+        <p class="text-sm text-neutral-500 dark:text-stone-400 mb-5">PDF, JPG or PNG. Max 5MB per file.</p>
+        <div class="space-y-4">
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Identity Proof (Aadhaar / PAN / Passport)</label><div class="border-2 border-dashed border-stone-300 dark:border-navy-600 rounded-lg p-4 text-center text-sm text-neutral-400 hover:border-navy-500 transition-colors cursor-pointer">Click to upload or drag file here</div></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Press Card / Accreditation</label><div class="border-2 border-dashed border-stone-300 dark:border-navy-600 rounded-lg p-4 text-center text-sm text-neutral-400 hover:border-navy-500 transition-colors cursor-pointer">Click to upload or drag file here</div></div>
+          <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Passport-size Photo</label><div class="border-2 border-dashed border-stone-300 dark:border-navy-600 rounded-lg p-4 text-center text-sm text-neutral-400 hover:border-navy-500 transition-colors cursor-pointer">Click to upload or drag file here</div></div>
+        </div>
+      </div>
+      <button onclick="showSuccess()" class="w-full sm:w-auto px-8 py-3.5 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transition-colors text-base">Submit Application →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ──── OFFICE BEARERS ──── -->
+<div id="page-bearers" class="hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Leadership</span></div>
+      <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white">National Office Bearers</h1>
+    </div>
+    <div class="mb-8">
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-5 pb-2 border-b border-stone-200 dark:border-navy-700 flex items-center gap-2"><span class="w-1 h-5 bg-red-600 rounded-full inline-block"></span>President & Secretary</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-red-400 hover:shadow-md transition-all"><div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">R</div><div class="text-sm font-semibold text-neutral-900 dark:text-white">Ravi Shankar</div><div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">President</div><div class="text-xs text-neutral-400 mt-0.5">Delhi</div></div>
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-red-400 hover:shadow-md transition-all"><div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">P</div><div class="text-sm font-semibold text-neutral-900 dark:text-white">Priya Nair</div><div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">Secretary General</div><div class="text-xs text-neutral-400 mt-0.5">Maharashtra</div></div>
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-red-400 hover:shadow-md transition-all"><div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">A</div><div class="text-sm font-semibold text-neutral-900 dark:text-white">Amit Verma</div><div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">Treasurer</div><div class="text-xs text-neutral-400 mt-0.5">Uttar Pradesh</div></div>
+      </div>
+    </div>
+    <div>
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-5 pb-2 border-b border-stone-200 dark:border-navy-700 flex items-center gap-2"><span class="w-1 h-5 bg-red-600 rounded-full inline-block"></span>Vice Presidents</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-red-400 hover:shadow-md transition-all"><div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">M</div><div class="text-sm font-semibold text-neutral-900 dark:text-white">Mohan Das</div><div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">VP — South Zone</div><div class="text-xs text-neutral-400 mt-0.5">Kerala</div></div>
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-red-400 hover:shadow-md transition-all"><div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">K</div><div class="text-sm font-semibold text-neutral-900 dark:text-white">Kavita Singh</div><div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">VP — North Zone</div><div class="text-xs text-neutral-400 mt-0.5">Punjab</div></div>
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-red-400 hover:shadow-md transition-all"><div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">B</div><div class="text-sm font-semibold text-neutral-900 dark:text-white">Biplab Sen</div><div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">VP — East Zone</div><div class="text-xs text-neutral-400 mt-0.5">West Bengal</div></div>
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-4 text-center hover:border-red-400 hover:shadow-md transition-all"><div class="w-20 h-20 rounded-full bg-navy-100 dark:bg-navy-700 mx-auto mb-3 flex items-center justify-center font-serif text-2xl font-bold text-navy-600 dark:text-stone-300">G</div><div class="text-sm font-semibold text-neutral-900 dark:text-white">Geeta Pillai</div><div class="text-xs text-neutral-500 dark:text-stone-400 mt-0.5">VP — West Zone</div><div class="text-xs text-neutral-400 mt-0.5">Gujarat</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ──── STATE UNITS ──── -->
+<div id="page-states" class="hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8"><div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Network</span></div><h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white">State Units</h1><p class="text-neutral-600 dark:text-stone-400 mt-2">NUJ India has active state units across all 36 states and union territories of India.</p></div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-red-400 hover:shadow-md transition-all"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-navy-100 dark:bg-navy-700 rounded-lg flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300">DL</div><div class="font-semibold text-neutral-900 dark:text-white">Delhi</div></div><p class="text-sm text-neutral-600 dark:text-stone-400">NUJ India Delhi State Unit — largest chapter with over 800 members.</p><div class="mt-3 text-xs text-neutral-400">Unit Secretary: Vikas Gupta</div></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-red-400 hover:shadow-md transition-all"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-navy-100 dark:bg-navy-700 rounded-lg flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300">MH</div><div class="font-semibold text-neutral-900 dark:text-white">Maharashtra</div></div><p class="text-sm text-neutral-600 dark:text-stone-400">NUJ India Maharashtra — active in Mumbai, Pune and Nagpur regions.</p><div class="mt-3 text-xs text-neutral-400">Unit Secretary: Rekha Joshi</div></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-red-400 hover:shadow-md transition-all"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-navy-100 dark:bg-navy-700 rounded-lg flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300">KA</div><div class="font-semibold text-neutral-900 dark:text-white">Karnataka</div></div><p class="text-sm text-neutral-600 dark:text-stone-400">NUJ India Karnataka — covering Bengaluru, Mysuru and coastal districts.</p><div class="mt-3 text-xs text-neutral-400">Unit Secretary: Suresh Babu</div></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-red-400 hover:shadow-md transition-all"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-navy-100 dark:bg-navy-700 rounded-lg flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300">WB</div><div class="font-semibold text-neutral-900 dark:text-white">West Bengal</div></div><p class="text-sm text-neutral-600 dark:text-stone-400">NUJ India West Bengal — based in Kolkata with district-level chapters.</p><div class="mt-3 text-xs text-neutral-400">Unit Secretary: Biplab Sen</div></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-red-400 hover:shadow-md transition-all"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-navy-100 dark:bg-navy-700 rounded-lg flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300">TN</div><div class="font-semibold text-neutral-900 dark:text-white">Tamil Nadu</div></div><p class="text-sm text-neutral-600 dark:text-stone-400">NUJ India Tamil Nadu — representing journalists across print and digital.</p><div class="mt-3 text-xs text-neutral-400">Unit Secretary: Lakshmi Krishnan</div></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 hover:border-red-400 hover:shadow-md transition-all"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-navy-100 dark:bg-navy-700 rounded-lg flex items-center justify-center text-sm font-bold text-navy-600 dark:text-stone-300">UP</div><div class="font-semibold text-neutral-900 dark:text-white">Uttar Pradesh</div></div><p class="text-sm text-neutral-600 dark:text-stone-400">NUJ India UP — active in Lucknow, Varanasi, Agra and Allahabad.</p><div class="mt-3 text-xs text-neutral-400">Unit Secretary: Ramesh Pandey</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──── CONTACT ──── -->
+<div id="page-contact" class="hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="lg:grid lg:grid-cols-3 lg:gap-12">
+      <div class="lg:col-span-1 mb-10 lg:mb-0">
+        <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Get in Touch</span></div>
+        <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white mb-6">Contact Us</h1>
+        <div class="space-y-5">
+          <div class="flex gap-3"><svg class="w-5 h-5 brand-red flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg><div><div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-0.5">Office Address</div><address class="not-italic text-sm text-neutral-700 dark:text-stone-300 leading-relaxed">NUJ India National Secretariat<br/>New Delhi — 110001<br/>India</address></div></div>
+          <div class="flex gap-3"><svg class="w-5 h-5 brand-red flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><div><div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-0.5">Email</div><a href="mailto:info@nujindia.org" class="text-sm text-navy-600 dark:text-amber-400 hover:underline">info@nujindia.org</a></div></div>
+          <div class="flex gap-3"><svg class="w-5 h-5 brand-red flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg><div><div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-0.5">Phone</div><a href="tel:+911100000000" class="text-sm text-navy-600 dark:text-amber-400 hover:underline">+91-11-XXXX-XXXX</a></div></div>
+        </div>
+      </div>
+      <div class="lg:col-span-2">
+        <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 lg:p-8">
+          <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-6">Send an Inquiry</h2>
+          <div class="space-y-5">
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Full Name <span class="brand-red">*</span></label><input type="text" placeholder="Your full name" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+              <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Email <span class="brand-red">*</span></label><input type="email" placeholder="your@email.com" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Phone</label><input type="tel" placeholder="+91 XXXXX XXXXX" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+              <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Department</label><select class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-700 dark:text-stone-200 focus:ring-2 focus:ring-navy-500 outline-none"><option>General Inquiry</option><option>Membership</option><option>Press / Media</option><option>Legal / Grievance</option><option>Events</option></select></div>
+            </div>
+            <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Subject <span class="brand-red">*</span></label><input type="text" placeholder="Brief subject of your inquiry" class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /></div>
+            <div><label class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">Message <span class="brand-red">*</span></label><textarea rows="5" placeholder="Describe your inquiry..." class="w-full px-4 py-2.5 text-sm border border-stone-300 dark:border-navy-600 rounded-lg bg-white dark:bg-navy-700 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none resize-none"></textarea></div>
+            <button onclick="alert('Message sent! We will respond within 2-3 business days.')" class="px-8 py-3 bg-navy-600 text-white font-semibold rounded-lg hover:bg-navy-700 transition-colors">Send Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ──── NEWSROOM ──── -->
+<div id="page-newsroom" class="hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8"><div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Press Room</span></div><h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white">Newsroom</h1></div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <article class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl overflow-hidden hover:shadow-md transition-shadow"><div class="h-44 bg-gradient-to-br from-navy-100 to-navy-200 dark:from-navy-700 dark:to-navy-800 flex items-center justify-center"><svg class="w-14 h-14 text-navy-300 dark:text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg></div><div class="p-5"><span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full text-white mb-3 bg-red-700">Press Freedom</span><h3 class="font-serif text-lg font-bold text-neutral-900 dark:text-white mb-2">NUJ India condemns arrest of journalist in Manipur</h3><p class="text-sm text-neutral-600 dark:text-stone-400 line-clamp-2">The National Union of Journalists (India) strongly condemns the arbitrary arrest of senior journalist Rahul Kumar in Manipur.</p><div class="text-xs text-neutral-400 mt-3">14 July 2024</div></div></article>
+      <article class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl overflow-hidden hover:shadow-md transition-shadow"><div class="h-44 bg-gradient-to-br from-stone-100 to-stone-200 dark:from-navy-700 dark:to-navy-800 flex items-center justify-center"><svg class="w-14 h-14 text-stone-300 dark:text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg></div><div class="p-5"><span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full text-white mb-3 bg-navy-600">Union Affairs</span><h3 class="font-serif text-lg font-bold text-neutral-900 dark:text-white mb-2">NUJ India calls for Majithia Wage Board implementation</h3><p class="text-sm text-neutral-600 dark:text-stone-400 line-clamp-2">The union demands immediate implementation of wage board recommendations across all major media houses in India.</p><div class="text-xs text-neutral-400 mt-3">10 July 2024</div></div></article>
+      <article class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl overflow-hidden hover:shadow-md transition-shadow"><div class="h-44 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-navy-700 dark:to-navy-800 flex items-center justify-center"><svg class="w-14 h-14 text-amber-200 dark:text-navy-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg></div><div class="p-5"><span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full text-white mb-3" style="background:#92400e">Media Industry</span><h3 class="font-serif text-lg font-bold text-neutral-900 dark:text-white mb-2">Annual General Meeting scheduled for August 15 in New Delhi</h3><p class="text-sm text-neutral-600 dark:text-stone-400 line-clamp-2">The AGM will discuss key resolutions on journalist welfare, upcoming elections, and press freedom initiatives.</p><div class="text-xs text-neutral-400 mt-3">5 July 2024</div></div></article>
+    </div>
+  </div>
+</div>
+
+<!-- ──── DOCUMENTS ──── -->
+<div id="page-documents" class="hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8"><div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-red-600"></span><span class="text-xs font-semibold uppercase tracking-widest brand-red">Downloads</span></div><h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white">Documents & Circulars</h1></div>
+    <div class="space-y-3">
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 flex items-center gap-4 hover:border-red-400 transition-colors"><svg class="w-8 h-8 brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><div class="flex-1"><div class="font-medium text-neutral-900 dark:text-white">NUJ India Constitution 2022</div><div class="text-xs text-neutral-400 mt-0.5">Policy Documents • PDF • 2.3 MB • 2022</div></div><a href="#" class="flex items-center gap-1.5 px-4 py-2 bg-navy-600 text-white text-sm font-medium rounded-lg hover:bg-navy-700 transition-colors flex-shrink-0"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3"/></svg>Download</a></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 flex items-center gap-4 hover:border-red-400 transition-colors"><svg class="w-8 h-8 brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><div class="flex-1"><div class="font-medium text-neutral-900 dark:text-white">Annual Report 2023–24</div><div class="text-xs text-neutral-400 mt-0.5">Reports • PDF • 4.1 MB • 2024</div></div><a href="#" class="flex items-center gap-1.5 px-4 py-2 bg-navy-600 text-white text-sm font-medium rounded-lg hover:bg-navy-700 transition-colors flex-shrink-0"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3"/></svg>Download</a></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 flex items-center gap-4 hover:border-red-400 transition-colors"><svg class="w-8 h-8 brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><div class="flex-1"><div class="font-medium text-neutral-900 dark:text-white">Membership Guidelines 2024</div><div class="text-xs text-neutral-400 mt-0.5">Circulars • PDF • 1.1 MB • 2024</div></div><a href="#" class="flex items-center gap-1.5 px-4 py-2 bg-navy-600 text-white text-sm font-medium rounded-lg hover:bg-navy-700 transition-colors flex-shrink-0"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3"/></svg>Download</a></div>
+      <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 flex items-center gap-4 hover:border-red-400 transition-colors"><svg class="w-8 h-8 brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><div class="flex-1"><div class="font-medium text-neutral-900 dark:text-white">Circular No. 12/2024 — State Unit Elections</div><div class="text-xs text-neutral-400 mt-0.5">Circulars • PDF • 0.5 MB • June 2024</div></div><a href="#" class="flex items-center gap-1.5 px-4 py-2 bg-navy-600 text-white text-sm font-medium rounded-lg hover:bg-navy-700 transition-colors flex-shrink-0"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3"/></svg>Download</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──── SEARCH PAGE ──── -->
+<div id="page-search" class="hidden">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white mb-6">Search</h1>
+    <div class="flex gap-3 mb-8"><input type="search" id="search-input" placeholder="Search news, office bearers, documents..." class="flex-1 px-5 py-3 text-base border border-stone-300 dark:border-navy-600 rounded-xl bg-white dark:bg-navy-800 text-neutral-900 dark:text-white focus:ring-2 focus:ring-navy-500 outline-none" /><button onclick="doSearch()" class="px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-colors">Search</button></div>
+    <p class="text-neutral-500 dark:text-stone-400 text-center text-sm">Enter a search term to find news, press releases, office bearers, documents and more.</p>
+  </div>
+</div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="bg-navy-600 dark:bg-navy-900 text-stone-200 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div class="lg:col-span-1">
+        <div class="mb-4"><span class="font-serif text-xl font-bold text-white">NUJ India</span><div class="text-xs text-stone-400 uppercase tracking-widest mt-0.5">National Union of Journalists</div></div>
+        <p class="text-stone-400 text-sm leading-relaxed">NUJ India is the national organisation of journalists committed to defending press freedom, protecting the rights of working journalists, and upholding democracy in India.</p>
+        <div class="flex gap-3 mt-5">
+          <a href="#" class="text-stone-400 hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <a href="#" class="text-stone-400 hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><button onclick="showPage('home')" class="text-stone-400 hover:text-white text-sm transition-colors">Home</button></li>
+          <li><a href="#" class="text-stone-400 hover:text-white text-sm transition-colors">About NUJ India</a></li>
+          <li><button onclick="showPage('bearers')" class="text-stone-400 hover:text-white text-sm transition-colors">Office Bearers</button></li>
+          <li><button onclick="showPage('states')" class="text-stone-400 hover:text-white text-sm transition-colors">State Units</button></li>
+          <li><button onclick="showPage('membership')" class="text-stone-400 hover:text-white text-sm transition-colors">Membership</button></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Newsroom</h3>
+        <ul class="space-y-2">
+          <li><button onclick="showPage('newsroom')" class="text-stone-400 hover:text-white text-sm transition-colors">Press Releases</button></li>
+          <li><button onclick="showPage('newsroom')" class="text-stone-400 hover:text-white text-sm transition-colors">News Updates</button></li>
+          <li><a href="#" class="text-stone-400 hover:text-white text-sm transition-colors">Letters & Statements</a></li>
+          <li><button onclick="showPage('documents')" class="text-stone-400 hover:text-white text-sm transition-colors">Documents & Circulars</button></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Contact</h3>
+        <address class="not-italic text-stone-400 text-sm leading-relaxed mb-3">NUJ India National Secretariat<br/>New Delhi — 110001, India</address>
+        <p class="text-stone-400 text-sm mb-1"><span class="text-stone-500">Email:</span> <a href="mailto:info@nujindia.org" class="hover:text-white transition-colors">info@nujindia.org</a></p>
+        <button onclick="showPage('contact')" class="mt-3 inline-flex items-center text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors">Send an inquiry →</button>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-navy-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-stone-500 text-xs">© National Union of Journalists (India). All rights reserved.</p>
+      <div class="flex gap-4 text-xs text-stone-500">
+        <a href="#" class="hover:text-stone-300">Constitution</a>
+        <button onclick="showPage('contact')" class="hover:text-stone-300">Contact</button>
+        <a href="#" class="hover:text-stone-300">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function showPage(name) {
+  document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('page-' + name).classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function showSuccess() {
+  const ref = 'NUJ-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+  document.getElementById('page-membership').innerHTML = `
+    <div class="max-w-2xl mx-auto px-4 py-16 text-center">
+      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><svg class="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-white mb-3">Application Submitted!</h1>
+      <p class="text-neutral-600 dark:text-stone-400 mb-6">Thank you for applying. Our membership committee will review your application and respond shortly.</p>
+      <div class="inline-block bg-navy-50 dark:bg-navy-800 border border-navy-200 dark:border-navy-600 rounded-xl px-8 py-6 mb-8">
+        <div class="text-sm text-neutral-500 mb-1">Your Reference Number</div>
+        <div class="font-mono text-2xl font-bold text-navy-600 dark:text-white">${ref}</div>
+        <div class="text-xs text-neutral-400 mt-2">Save this to track your application</div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button onclick="showPage('home')" class="px-6 py-3 bg-navy-600 text-white font-semibold rounded-lg hover:bg-navy-700 transition-colors">Back to Home</button>
+      </div>
+    </div>`;
+}
+function doSearch() {
+  const q = document.getElementById('search-input').value;
+  if (q) alert('Search for "' + q + '" — In the full Django app, results appear here from the database.');
+}
+</script>
+</body>
+</html>

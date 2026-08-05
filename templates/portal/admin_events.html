@@ -1,0 +1,41 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Events Management{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h2 class="font-bold text-white text-xl">Manage Union Events</h2>
+    <p class="text-xs text-gray-400 mt-1">Conferences, state conventions, workshops, and rallies.</p>
+  </div>
+  <a href="/nuj-admin/events/event/add/" class="px-4 py-2 bg-union-red hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors">
+    + Add Event
+  </a>
+</div>
+
+<div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+  {% if events %}
+  <div class="divide-y divide-white/5">
+    {% for event in events %}
+    <div class="p-4 flex items-center gap-4 hover:bg-white/2 transition-colors">
+      {% if event.cover_image %}
+      <img src="{{ event.cover_image.url }}" class="w-14 h-10 rounded-lg object-cover flex-shrink-0" alt="" />
+      {% else %}
+      <div class="w-14 h-10 rounded-lg bg-navy-700 flex items-center justify-center text-lg flex-shrink-0">📅</div>
+      {% endif %}
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="font-semibold text-white text-sm">{{ event.title }}</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-amber-900/40 text-amber-300 font-medium">{{ event.get_event_type_display }}</span>
+          {% if not event.is_published %}<span class="text-xs px-2 py-0.5 rounded-full bg-red-900/40 text-red-300">Draft</span>{% endif %}
+        </div>
+        <div class="text-xs text-gray-500 truncate mt-0.5">📍 {{ event.location|default:"TBA" }} · 🕒 {{ event.start_datetime|date:"d M Y, H:i" }}</div>
+      </div>
+      <a href="/nuj-admin/events/event/{{ event.pk }}/change/" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Edit</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="py-16 text-center text-gray-500 text-sm">No events listed.</div>
+  {% endif %}
+</div>
+{% endblock %}

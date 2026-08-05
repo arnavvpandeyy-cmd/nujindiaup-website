@@ -1,0 +1,49 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Documents & Circulars{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h2 class="font-bold text-white text-xl">Manage Documents & Circulars</h2>
+    <p class="text-xs text-gray-400 mt-1">Official PDFs, archives, constitutions, and public downloads.</p>
+  </div>
+  <a href="/nuj-admin/documents/document/add/" class="px-4 py-2 bg-union-red hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors">
+    + Upload Document
+  </a>
+</div>
+
+<div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+  {% if documents %}
+  <div class="divide-y divide-white/5">
+    {% for doc in documents %}
+    <div class="p-4 flex items-center gap-4 hover:bg-white/2 transition-colors">
+      <div class="w-10 h-10 rounded-lg bg-navy-700 flex items-center justify-center text-xl flex-shrink-0">📄</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="font-semibold text-white text-sm">{{ doc.title }}</span>
+          {% if doc.category %}
+          <span class="text-xs px-2 py-0.5 rounded-full bg-blue-900/40 text-blue-300 font-medium">{{ doc.category.name }}</span>
+          {% endif %}
+          {% if doc.year %}
+          <span class="text-xs text-gray-500">({{ doc.year }})</span>
+          {% endif %}
+          {% if not doc.is_published %}
+          <span class="text-xs px-2 py-0.5 rounded-full bg-red-900/40 text-red-300">Draft</span>
+          {% endif %}
+        </div>
+        <div class="text-xs text-gray-500 truncate mt-0.5">{{ doc.description|default:"No description" }}</div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        {% if doc.file %}
+        <a href="{{ doc.file.url }}" target="_blank" class="text-xs px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-blue-400 rounded-lg transition-colors">Download 📎</a>
+        {% endif %}
+        <a href="/nuj-admin/documents/document/{{ doc.pk }}/change/" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Edit</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="py-16 text-center text-gray-500 text-sm">No documents uploaded yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

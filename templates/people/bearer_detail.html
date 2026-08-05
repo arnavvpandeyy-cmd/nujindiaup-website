@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="lg:grid lg:grid-cols-3 lg:gap-12">
+
+    {# Sidebar: Photo + Quick Info #}
+    <div class="lg:col-span-1 mb-8 lg:mb-0">
+      {% if bearer.photo %}
+      <img src="{{ bearer.photo.url }}" alt="{{ bearer.name }}" class="w-48 h-48 lg:w-full lg:h-auto lg:max-h-80 object-cover rounded-2xl shadow-lg mb-6" loading="lazy" />
+      {% else %}
+      <div class="w-48 h-48 lg:w-full lg:h-64 rounded-2xl bg-navy-100 dark:bg-navy-700 flex items-center justify-center font-serif text-5xl font-bold text-navy-600 dark:text-stone-300 mb-6">
+        {{ bearer.name|slice:":1" }}
+      </div>
+      {% endif %}
+
+      <div class="bg-stone-50 dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-xl p-5 space-y-3">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-stone-500">Category</div>
+          <div class="text-sm font-medium text-neutral-800 dark:text-stone-200 mt-0.5">{{ bearer.get_category_display }}</div>
+        </div>
+        {% if bearer.state %}
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-stone-500">State</div>
+          <div class="text-sm font-medium text-neutral-800 dark:text-stone-200 mt-0.5">{{ bearer.get_state_display_name }}</div>
+        </div>
+        {% endif %}
+        {% if bearer.zone %}
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-stone-500">Zone</div>
+          <div class="text-sm font-medium text-neutral-800 dark:text-stone-200 mt-0.5">{{ bearer.zone }}</div>
+        </div>
+        {% endif %}
+        {% if bearer.term_start or bearer.term_end %}
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-stone-500">Term</div>
+          <div class="text-sm font-medium text-neutral-800 dark:text-stone-200 mt-0.5">
+            {% if bearer.term_start %}{{ bearer.term_start|date:"Y" }}{% endif %}
+            {% if bearer.term_start and bearer.term_end %} – {% endif %}
+            {% if bearer.term_end %}{{ bearer.term_end|date:"Y" }}{% endif %}
+          </div>
+        </div>
+        {% endif %}
+        {% if bearer.show_contact %}
+        {% if bearer.email %}
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-stone-500">Email</div>
+          <a href="mailto:{{ bearer.email }}" class="text-sm text-navy-600 dark:text-amber-400 hover:underline mt-0.5 block">{{ bearer.email }}</a>
+        </div>
+        {% endif %}
+        {% if bearer.phone %}
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-stone-500">Phone</div>
+          <a href="tel:{{ bearer.phone }}" class="text-sm text-navy-600 dark:text-amber-400 hover:underline mt-0.5 block">{{ bearer.phone }}</a>
+        </div>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+
+    {# Main content #}
+    <div class="lg:col-span-2">
+      <span class="inline-block text-xs font-semibold uppercase tracking-widest text-union-red mb-2">{{ bearer.get_category_display }}</span>
+      <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white mb-1">{{ bearer.name }}</h1>
+      <p class="text-xl text-neutral-600 dark:text-stone-400 mb-8">{{ bearer.role }}</p>
+
+      {% if bearer.bio %}
+      <div class="prose prose-lg dark:prose-invert max-w-reading prose-headings:font-serif prose-p:text-neutral-700 dark:prose-p:text-stone-300">
+        {{ bearer.bio|linebreaks }}
+      </div>
+      {% else %}
+      <p class="text-neutral-500 dark:text-stone-500 italic">No biography available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

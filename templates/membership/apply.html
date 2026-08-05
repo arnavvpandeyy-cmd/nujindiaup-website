@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  {# Page Header #}
+  <div class="mb-8">
+    <div class="flex items-center gap-2 mb-2"><span class="w-5 h-0.5 bg-union-red"></span><span class="text-xs font-semibold uppercase tracking-widest text-union-red bilingual-heading" data-hi="सदस्यता">Membership</span></div>
+    <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white bilingual-heading" data-hi="सदस्यता के लिए आवेदन करें">Apply for Membership</h1>
+    <p class="text-neutral-600 dark:text-stone-400 mt-2">Fill in the form below to apply for membership in the National Union of Journalists (India).</p>
+  </div>
+
+  {# Important notice #}
+  <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-8 flex gap-3" role="note">
+    <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <div class="text-sm text-amber-800 dark:text-amber-300">
+      <strong>After submission</strong>, you will receive a reference number via email. Use it to <a href="/membership/status/" class="underline">track your application status</a>.
+    </div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" novalidate class="space-y-8" aria-label="Membership application form">
+    {% csrf_token %}
+    {# Honeypot — hidden from real users #}
+    <div style="display:none" aria-hidden="true">{{ form.website }}</div>
+
+    {# Non-field errors #}
+    {% if form.non_field_errors %}
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-sm text-red-800 dark:text-red-300">
+      {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    {# Section 1: Personal Details #}
+    <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 lg:p-8">
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
+        <span class="w-7 h-7 bg-navy-600 text-white rounded-full text-sm font-bold flex items-center justify-center">1</span>
+        Personal Details
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div>
+          <label for="{{ form.full_name.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.full_name.label }}<span class="text-red-600 ml-0.5">*</span></label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}<p class="mt-1 text-xs text-red-600">{{ form.full_name.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.email.label }}<span class="text-red-600 ml-0.5">*</span></label>
+          {{ form.email }}
+          {% if form.email.errors %}<p class="mt-1 text-xs text-red-600">{{ form.email.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.phone.label }}<span class="text-red-600 ml-0.5">*</span></label>
+          {{ form.phone }}
+          {% if form.phone.errors %}<p class="mt-1 text-xs text-red-600">{{ form.phone.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.dob.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.dob.label }}</label>
+          {{ form.dob }}
+          {% if form.dob.errors %}<p class="mt-1 text-xs text-red-600">{{ form.dob.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.state.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.state.label }}<span class="text-red-600 ml-0.5">*</span></label>
+          {{ form.state }}
+          {% if form.state.errors %}<p class="mt-1 text-xs text-red-600">{{ form.state.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.pincode.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.pincode.label }}</label>
+          {{ form.pincode }}
+          {% if form.pincode.errors %}<p class="mt-1 text-xs text-red-600">{{ form.pincode.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="sm:col-span-2">
+          <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.address.label }}<span class="text-red-600 ml-0.5">*</span></label>
+          {{ form.address }}
+          {% if form.address.errors %}<p class="mt-1 text-xs text-red-600">{{ form.address.errors.0 }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    {# Section 2: Professional Details #}
+    <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 lg:p-8">
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
+        <span class="w-7 h-7 bg-navy-600 text-white rounded-full text-sm font-bold flex items-center justify-center">2</span>
+        Professional Details
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div>
+          <label for="{{ form.designation.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.designation.label }}<span class="text-red-600 ml-0.5">*</span></label>
+          {{ form.designation }}
+          {% if form.designation.errors %}<p class="mt-1 text-xs text-red-600">{{ form.designation.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.organization.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.organization.label }}<span class="text-red-600 ml-0.5">*</span></label>
+          {{ form.organization }}
+          {% if form.organization.errors %}<p class="mt-1 text-xs text-red-600">{{ form.organization.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.experience_years.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.experience_years.label }}</label>
+          {{ form.experience_years }}
+          {% if form.experience_years.errors %}<p class="mt-1 text-xs text-red-600">{{ form.experience_years.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.membership_type.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.membership_type.label }}</label>
+          {{ form.membership_type }}
+          {% if form.membership_type.errors %}<p class="mt-1 text-xs text-red-600">{{ form.membership_type.errors.0 }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    {# Section 3: Documents #}
+    <div class="bg-white dark:bg-navy-800 border border-stone-200 dark:border-navy-700 rounded-2xl p-6 lg:p-8">
+      <h2 class="font-serif text-xl font-bold text-neutral-900 dark:text-white mb-2 flex items-center gap-2">
+        <span class="w-7 h-7 bg-navy-600 text-white rounded-full text-sm font-bold flex items-center justify-center">3</span>
+        Supporting Documents
+      </h2>
+      <p class="text-sm text-neutral-500 dark:text-stone-400 mb-6">Upload clear scanned copies. Accepted: PDF, JPG, PNG. Max size: 5MB per file.</p>
+      <div class="space-y-5">
+        <div>
+          <label for="{{ form.id_proof.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.id_proof.label }}</label>
+          <div class="border-2 border-dashed border-stone-300 dark:border-navy-600 rounded-lg p-4 hover:border-navy-500 transition-colors">{{ form.id_proof }}</div>
+          {% if form.id_proof.errors %}<p class="mt-1 text-xs text-red-600">{{ form.id_proof.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.press_card.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.press_card.label }}</label>
+          <div class="border-2 border-dashed border-stone-300 dark:border-navy-600 rounded-lg p-4 hover:border-navy-500 transition-colors">{{ form.press_card }}</div>
+          {% if form.press_card.errors %}<p class="mt-1 text-xs text-red-600">{{ form.press_card.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label for="{{ form.photo.id_for_label }}" class="block text-sm font-medium text-neutral-700 dark:text-stone-300 mb-1.5">{{ form.photo.label }}</label>
+          <div class="border-2 border-dashed border-stone-300 dark:border-navy-600 rounded-lg p-4 hover:border-navy-500 transition-colors">{{ form.photo }}</div>
+          {% if form.photo.errors %}<p class="mt-1 text-xs text-red-600">{{ form.photo.errors.0 }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    {# Submit #}
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <button type="submit"
+              class="w-full sm:w-auto px-8 py-3.5 bg-red-700 text-white font-semibold rounded-lg hover:bg-red-800 transition-colors text-base focus:ring-4 focus:ring-red-300">
+        Submit Application
+      </button>
+      <p class="text-xs text-neutral-500 dark:text-stone-500 text-center sm:text-left">
+        By submitting, you confirm that all provided information is accurate.
+      </p>
+    </div>
+  </form>
+</div>
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select, textarea').forEach(el => {
+  if (!el.closest('[style*="display:none"]')) {
+    el.classList.add('w-full','px-4','py-2.5','text-sm','border','border-stone-300','dark:border-navy-600','rounded-lg','bg-white','dark:bg-navy-700','text-neutral-900','dark:text-white','focus:ring-2','focus:ring-navy-500','focus:border-transparent','outline-none','transition-colors');
+  }
+});
+document.querySelectorAll('input[type="file"]').forEach(el => {
+  el.classList.add('w-full','text-sm','text-neutral-600','dark:text-stone-300');
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}Announcements{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+  <!-- Add Announcement Form -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl p-5">
+    <h3 class="font-bold text-white text-base mb-3">+ Add New Announcement Ticker</h3>
+    <form method="post" class="flex flex-col sm:flex-row gap-3">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add">
+      <input type="text" name="title" placeholder="Announcement title / headline..." required class="flex-1 bg-gray-800 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+      <input type="text" name="link" placeholder="Target link (optional)..." class="w-full sm:w-64 bg-gray-800 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:ring-1 focus:ring-union-red outline-none" />
+      <button type="submit" class="px-5 py-2 bg-union-red hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors flex-shrink-0">Add Ticker</button>
+    </form>
+  </div>
+
+  <!-- Announcement List -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-b border-white/5 font-semibold text-white text-sm">Active Tickers</div>
+    {% if announcements %}
+    <div class="divide-y divide-white/5">
+      {% for ann in announcements %}
+      <div class="p-4 flex items-center justify-between gap-4 hover:bg-white/2 transition-colors">
+        <div>
+          <div class="font-medium text-white text-sm">🔔 {{ ann.title }}</div>
+          {% if ann.link %}
+          <a href="{{ ann.link }}" target="_blank" class="text-xs text-blue-400 hover:underline mt-0.5 block">🔗 {{ ann.link }}</a>
+          {% endif %}
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <form method="post" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="toggle">
+            <input type="hidden" name="ann_id" value="{{ ann.pk }}">
+            <button type="submit" class="text-xs px-3 py-1.5 rounded-lg {% if ann.is_published %}bg-green-900/50 text-green-300{% else %}bg-gray-800 text-gray-400{% endif %}">
+              {% if ann.is_published %}Active{% else %}Hidden{% endif %}
+            </button>
+          </form>
+
+          <form method="post" class="inline" onsubmit="return confirm('Delete this announcement?')">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="ann_id" value="{{ ann.pk }}">
+            <button type="submit" class="text-xs px-3 py-1.5 bg-red-900/40 hover:bg-red-900/70 text-red-300 rounded-lg transition-colors">Delete</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="py-12 text-center text-gray-500 text-sm">No announcements configured.</div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

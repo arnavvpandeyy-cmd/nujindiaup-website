@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  /* ─── Article typography ─── */
+  .article-body { line-height: 1.85; color: #374151; }
+  .dark .article-body { color: #d1d5db; }
+  .article-body p { margin-bottom: 1.2em; }
+  .article-body h2 { font-size: 1.4rem; font-weight: 700; margin: 1.6em 0 .6em; }
+  .article-body h3 { font-size: 1.15rem; font-weight: 700; margin: 1.4em 0 .5em; }
+  .article-body img { max-width: 100%; border-radius: .75rem; margin: 1rem 0; }
+  .article-body blockquote { border-left: 4px solid #c41e3a; padding-left: 1.2rem; margin: 1.5rem 0; font-style: italic; color: #6b7280; }
+
+  /* ─── Cover image ─── */
+  .cover-wrap {
+    width: 100%;
+    max-height: 500px;
+    overflow: hidden;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    background: #f0f2f5;
+    position: relative;
+    cursor: pointer;
+  }
+  .cover-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+  }
+  .cover-wrap:hover img { transform: scale(1.02); }
+  .cover-wrap .cover-badge {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ─── Gallery grid ─── */
+  .gallery-section {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  .dark .gallery-section { border-top-color: #374151; }
+  .gallery-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dark .gallery-heading { color: #f9fafb; }
+  .gallery-count-badge {
+    background: #c41e3a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f0f2f5;
+    aspect-ratio: 4 / 3;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .gallery-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+  }
+  .gallery-item:hover img { transform: scale(1.05); }
+  .gallery-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background .2s;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+  }
+  .gallery-item:hover .gallery-item-overlay { background: rgba(0,0,0,.35); }
+  .gallery-caption {
+    color: #fff;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all .2s;
+    line-height: 1.4;
+    text-shadow: 0 1px 4px rgba(0,0,0,.5);
+  }
+  .gallery-item:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+  .gallery-zoom-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .2s;
+    font-size: 14px;
+  }
+  .gallery-item:hover .gallery-zoom-icon { opacity: 1; }
+
+  /* ─── Lightbox ─── */
+  #lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    cursor: zoom-out;
+  }
+  #lightbox.active { display: flex; }
+  .lb-content {
+    max-width: min(92vw, 1100px);
+    max-height: 92vh;
+    position: relative;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .lb-image-wrap {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,.7);
+  }
+  #lb-img {
+    max-width: min(88vw, 1060px);
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    object-fit: contain;
+  }
+  .lb-caption {
+    color: rgba(255,255,255,.8);
+    font-size: 13px;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+  .lb-counter {
+    color: rgba(255,255,255,.5);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .06em;
+  }
+  .lb-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.2);
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background .15s;
+    z-index: 2;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,.25); }
+  .lb-prev { left: -56px; }
+  .lb-next { right: -56px; }
+  .lb-close {
+    position: absolute;
+    top: -48px;
+    right: 0;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .lb-close:hover { background: rgba(196,30,58,.7); }
+  @media (max-width: 640px) {
+    .lb-prev { left: -40px; }
+    .lb-next { right: -40px; }
+    .lb-btn { width: 36px; height: 36px; font-size: 14px; }
+  }
+</style>
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Breadcrumb -->
+  <div class="mb-6 flex items-center gap-2 text-sm text-neutral-500 dark:text-stone-400">
+    <a href="/newsroom/" class="hover:text-union-red transition-colors">Newsroom</a>
+    <span>›</span>
+    <a href="/newsroom/news/" class="hover:text-union-red transition-colors">News</a>
+    <span>›</span>
+    <span class="text-neutral-700 dark:text-stone-300 truncate">{{ post.title }}</span>
+  </div>
+
+  <!-- Category badge -->
+  {% if post.category %}
+  <span class="inline-block text-xs font-semibold px-3 py-1.5 rounded-full text-white mb-4"
+    style="background-color:{{ post.category.color|default:'#1a2744' }}">
+    {{ post.category.name }}
+  </span>
+  {% endif %}
+
+  <!-- Title -->
+  <h1 class="font-serif text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white leading-tight mb-4">
+    {{ post.title }}
+  </h1>
+
+  <!-- Meta -->
+  <div class="flex items-center gap-4 text-sm text-neutral-500 dark:text-stone-400 mb-8 pb-6 border-b border-stone-200 dark:border-navy-700">
+    <span>{{ post.published_at|date:"j N Y" }}</span>
+    {% if post.author %}<span>·</span><span>{{ post.author }}</span>{% endif %}
+    {% with total=post.extra_images.count %}
+    {% if total %}<span>·</span><span class="text-union-red font-medium">📷 {{ total }} photo{% if total > 1 %}s{% endif %}</span>{% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Cover Image -->
+  {% if post.cover_image %}
+  {% with total=post.extra_images.count %}
+  <div class="cover-wrap" onclick="openLightbox(0)">
+    <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" />
+    {% if total %}
+    <div class="cover-badge">
+      📷 {{ total|add:1 }} photos — Click to view
+    </div>
+    {% else %}
+    <div class="cover-badge">🔍 Click to enlarge</div>
+    {% endif %}
+  </div>
+  {% endwith %}
+  {% endif %}
+
+  <!-- Article body -->
+  <div class="article-body">
+    {{ post.body|safe }}
+  </div>
+
+  <!-- ── GALLERY ── -->
+  {% with images=post.extra_images.all %}
+  {% if images %}
+  <div class="gallery-section">
+    <h2 class="gallery-heading">
+      📷 Photo Gallery
+      <span class="gallery-count-badge">{{ images|length }} photo{% if images|length > 1 %}s{% endif %}</span>
+    </h2>
+    <div class="gallery-grid">
+      {% for img in images %}
+      <div class="gallery-item" onclick="openLightbox({{ forloop.counter }})">
+        <img src="{{ img.image.url }}" alt="{{ img.caption|default:post.title }}" loading="lazy" />
+        <div class="gallery-item-overlay">
+          {% if img.caption %}
+          <span class="gallery-caption">{{ img.caption }}</span>
+          {% endif %}
+        </div>
+        <div class="gallery-zoom-icon">🔍</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  <!-- Share / Back -->
+  <div class="mt-10 pt-6 border-t border-stone-200 dark:border-navy-700 flex items-center justify-between flex-wrap gap-3">
+    <a href="/newsroom/news/" class="text-sm text-neutral-500 dark:text-stone-400 hover:text-union-red transition-colors">
+      ← Back to News Updates
+    </a>
+    <div class="flex gap-2">
+      <a href="https://wa.me/?text={{ post.title|urlencode }}%20{{ request.build_absolute_uri }}"
+        target="_blank" rel="noopener"
+        class="text-xs px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+        WhatsApp
+      </a>
+      <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>alert('Link copied!'))"
+        class="text-xs px-3 py-1.5 bg-stone-100 dark:bg-navy-700 hover:bg-stone-200 dark:hover:bg-navy-600 text-neutral-700 dark:text-stone-300 rounded-lg transition-colors">
+        Copy Link
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════ LIGHTBOX ══════════════════ -->
+{% if post.cover_image %}
+<div id="lightbox" onclick="closeLightbox(event)">
+  <div class="lb-content">
+    <button class="lb-close" onclick="closeLb()" title="Close">✕</button>
+    <div class="lb-image-wrap">
+      <img id="lb-img" src="" alt="" />
+      <button class="lb-btn lb-prev" onclick="lbNav(-1)">‹</button>
+      <button class="lb-btn lb-next" onclick="lbNav(1)">›</button>
+    </div>
+    <div class="lb-caption" id="lb-caption"></div>
+    <div class="lb-counter" id="lb-counter"></div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+// Build images array: cover first, then extra images
+const lbImages = [
+  {% if post.cover_image %}
+  { src: "{{ post.cover_image.url }}", caption: "{{ post.title|escapejs }}" },
+  {% endif %}
+  {% for img in post.extra_images.all %}
+  { src: "{{ img.image.url }}", caption: "{{ img.caption|default:post.title|escapejs }}" }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
+
+let lbIdx = 0;
+
+function openLightbox(index) {
+  if (!lbImages.length) return;
+  lbIdx = Math.max(0, Math.min(index, lbImages.length - 1));
+  updateLb();
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLb() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function closeLightbox(e) {
+  if (e.target === document.getElementById('lightbox')) closeLb();
+}
+
+function lbNav(dir) {
+  lbIdx = (lbIdx + dir + lbImages.length) % lbImages.length;
+  updateLb();
+}
+
+function updateLb() {
+  const item = lbImages[lbIdx];
+  const img = document.getElementById('lb-img');
+  img.style.opacity = '0';
+  setTimeout(() => {
+    img.src = item.src;
+    img.alt = item.caption;
+    img.style.opacity = '1';
+  }, 120);
+  img.style.transition = 'opacity .15s';
+  document.getElementById('lb-caption').textContent = item.caption;
+  document.getElementById('lb-counter').textContent = `${lbIdx + 1} / ${lbImages.length}`;
+
+  // Show/hide nav
+  const isOne = lbImages.length <= 1;
+  document.querySelectorAll('.lb-btn').forEach(b => b.style.display = isOne ? 'none' : '');
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('active')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') lbNav(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') lbNav(-1);
+  if (e.key === 'Escape') closeLb();
+});
+</script>
+{% endblock %}

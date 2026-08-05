@@ -1,0 +1,72 @@
+{% extends 'portal/base_portal.html' %}
+{% block page_title %}News & Press Releases{% endblock %}
+
+{% block content %}
+<div class="flex items-center gap-3 mb-6 flex-wrap">
+  <a href="/portal/admin/news/add/" class="px-4 py-2.5 bg-union-red hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">+ Add News Post</a>
+  <a href="/portal/admin/press-release/add/" class="px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium rounded-lg transition-colors">+ Add Press Release</a>
+</div>
+
+<div class="space-y-6">
+  <!-- News Posts -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+      <h2 class="font-semibold text-white text-sm">News Posts ({{ news.count }})</h2>
+      <a href="/newsroom/" target="_blank" class="text-xs text-gray-400 hover:text-white">View public site ↗</a>
+    </div>
+    {% if news %}
+    <div class="divide-y divide-white/5">
+      {% for post in news %}
+      <div class="px-5 py-3.5 flex items-center gap-4 hover:bg-white/2 transition-colors">
+        {% if post.cover_image %}
+        <img src="{{ post.cover_image.url }}" class="w-14 h-9 rounded-md object-cover flex-shrink-0" alt="" />
+        {% else %}
+        <div class="w-14 h-9 bg-gray-700 rounded-md flex items-center justify-center text-xs text-gray-400 flex-shrink-0">No img</div>
+        {% endif %}
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-sm font-medium text-white truncate">{{ post.title }}</span>
+            {% if post.is_featured %}<span class="text-xs px-1.5 py-0.5 rounded bg-amber-900/50 text-amber-300">Featured</span>{% endif %}
+            {% if not post.is_published %}<span class="text-xs px-1.5 py-0.5 rounded bg-gray-700 text-gray-400">Draft</span>{% endif %}
+          </div>
+          <div class="text-xs text-gray-500 mt-0.5">{{ post.author }} · {{ post.published_at|date:"d M Y" }}</div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <a href="/newsroom/{{ post.slug }}/" target="_blank" class="text-xs text-gray-400 hover:text-white">View ↗</a>
+          <a href="/portal/admin/news/{{ post.pk }}/edit/" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Edit</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="py-8 text-center text-gray-500 text-sm">No news posts yet.</div>
+    {% endif %}
+  </div>
+
+  <!-- Press Releases -->
+  <div class="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+      <h2 class="font-semibold text-white text-sm">Press Releases ({{ releases.count }})</h2>
+    </div>
+    {% if releases %}
+    <div class="divide-y divide-white/5">
+      {% for release in releases %}
+      <div class="px-5 py-3.5 flex items-center gap-4 hover:bg-white/2 transition-colors">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-white truncate">{{ release.title }}</span>
+            {% if not release.is_published %}<span class="text-xs px-1.5 py-0.5 rounded bg-gray-700 text-gray-400">Draft</span>{% endif %}
+          </div>
+          <div class="text-xs text-gray-500 mt-0.5">{{ release.published_at|date:"d M Y" }} {% if release.attachment %}· PDF attached{% endif %}</div>
+        </div>
+        <a href="/portal/admin/press-release/{{ release.pk }}/edit/" class="flex-shrink-0 text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Edit</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="py-8 text-center text-gray-500 text-sm">No press releases yet.</div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
