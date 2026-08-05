@@ -195,8 +195,7 @@ SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
 ALLOWED_UPLOAD_EXTENSIONS = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.webp']
 MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 
-# Logging
-LOGGING = {
+ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -208,11 +207,6 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'nujindia.log',
             'formatter': 'verbose',
         },
     },
