@@ -193,9 +193,8 @@ SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
 
 # File upload security
 ALLOWED_UPLOAD_EXTENSIONS = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.webp']
-MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
-
- LOGGING = {
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB 
+LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
